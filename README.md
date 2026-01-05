@@ -4,7 +4,7 @@
 
 This repository contains the documentation infrastructure for [SerenAI](https://serendb.com), including:
 
-- **API Documentation** - Interactive REST API docs powered by Redoc
+- **API Documentation** - Interactive REST API docs powered by [Scalar](https://github.com/scalar/scalar)
 - **llms.txt** - LLM-optimized context files following [llmstxt.org](https://llmstxt.org) spec
 - **MCP Documentation** - Model Context Protocol server reference
 - **Guides** - Step-by-step tutorials and how-to guides
@@ -34,7 +34,7 @@ npm run fetch:openapi
 # Build everything
 npm run build
 
-# Preview Redoc locally
+# Preview locally with Scalar
 npm run dev
 ```
 
@@ -44,11 +44,10 @@ npm run dev
 seren-docs/
 ├── scripts/
 │   ├── build.js              # Main build orchestrator
+│   ├── build-scalar.js       # Scalar API docs generator
 │   ├── generate-llms-txt.js  # OpenAPI → llms.txt
 │   ├── generate-mcp-docs.js  # MCP tool documentation
 │   └── build-guides.js       # Markdown → HTML
-├── templates/
-│   └── redoc-config.yaml     # Redoc theming
 ├── manual/
 │   └── guides/               # Hand-written tutorials
 ├── dist/                     # Generated output (gitignored)

@@ -110,7 +110,7 @@ async function main() {
 
   // Run all build steps
   const steps = [
-    ['npm run build:redoc', 'Generating Redoc documentation'],
+    ['npm run build:api', 'Generating Scalar API documentation'],
     ['npm run build:llms', 'Generating llms.txt files'],
     ['npm run build:mcp', 'Generating MCP documentation'],
     ['node scripts/build-guides.js', 'Building manual guides']

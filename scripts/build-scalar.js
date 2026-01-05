@@ -1,0 +1,136 @@
+#!/usr/bin/env node
+// ABOUTME: Generates Scalar API documentation from OpenAPI spec
+// ABOUTME: Creates a standalone HTML page with embedded Scalar viewer
+
+const fs = require('fs');
+const path = require('path');
+
+const OPENAPI_PATH = path.join(__dirname, '..', 'openapi.json');
+const DIST_PATH = path.join(__dirname, '..', 'dist');
+const OUTPUT_PATH = path.join(DIST_PATH, 'index.html');
+
+function generateScalarHtml() {
+  // Read OpenAPI spec and embed it inline for better performance
+  let specContent = '{}';
+  try {
+    specContent = fs.readFileSync(OPENAPI_PATH, 'utf-8');
+    // Validate it's valid JSON
+    JSON.parse(specContent);
+  } catch (err) {
+    console.error(`Warning: Could not load OpenAPI spec: ${err.message}`);
+    console.log('Using placeholder spec');
+  }
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SerenAI API Documentation</title>
+  <meta name="description" content="Pay Per Call Agentic Commerce for public and private data">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    /* Custom header bar */
+    .seren-header {
+      background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .seren-header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .seren-header .tagline {
+      opacity: 0.9;
+      font-size: 0.875rem;
+      margin-left: 16px;
+    }
+    .seren-header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 0.875rem;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    .seren-header nav a:hover {
+      opacity: 1;
+    }
+    /* Scalar container */
+    #scalar-root {
+      height: calc(100vh - 52px);
+    }
+  </style>
+</head>
+<body>
+  <div class="seren-header">
+    <div style="display: flex; align-items: center;">
+      <h1>SerenAI</h1>
+      <span class="tagline">Pay Per Call Agentic Commerce</span>
+    </div>
+    <nav>
+      <a href="/mcp/">MCP Server</a>
+      <a href="/guides/">Guides</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="https://serendb.com" target="_blank">Dashboard</a>
+    </nav>
+  </div>
+
+  <div id="scalar-root"></div>
+
+  <script id="openapi-spec" type="application/json">
+${specContent}
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  <script>
+    const spec = JSON.parse(document.getElementById('openapi-spec').textContent);
+
+    Scalar.createApiReference('#scalar-root', {
+      spec: {
+        content: spec
+      },
+      theme: 'bluePlanet',
+      layout: 'modern',
+      hideModels: false,
+      hideDownloadButton: false,
+      showSidebar: true,
+      searchHotKey: 'k',
+      metaData: {
+        title: 'SerenAI API Documentation',
+        description: 'Pay Per Call Agentic Commerce for public and private data'
+      }
+    });
+  </script>
+</body>
+</html>`;
+}
+
+function main() {
+  console.log('Generating Scalar API documentation...');
+
+  // Ensure dist directory exists
+  if (!fs.existsSync(DIST_PATH)) {
+    fs.mkdirSync(DIST_PATH, { recursive: true });
+  }
+
+  const html = generateScalarHtml();
+  fs.writeFileSync(OUTPUT_PATH, html);
+
+  const stats = fs.statSync(OUTPUT_PATH);
+  console.log(`Generated index.html (${(stats.size / 1024).toFixed(1)}KB)`);
+}
+
+main();

@@ -38,8 +38,8 @@ jobs:
       - name: Create dist directory
         run: mkdir -p dist/mcp dist/guides
 
-      - name: Generate Redoc HTML
-        run: npm run build:redoc
+      - name: Generate Scalar API docs
+        run: npm run build:api
 
       - name: Generate llms.txt files
         run: npm run build:llms
