@@ -1,0 +1,60 @@
+name: Generate Documentation
+
+on:
+  repository_dispatch:
+    types: [openapi-updated, mcp-updated]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'templates/**'
+      - 'manual/**'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch OpenAPI spec from serencore
+        run: |
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -o openapi.json \
+            "https://raw.githubusercontent.com/serenorg/serencore/main/seren-core/openapi.json"
+          echo "OpenAPI spec size: $(wc -c < openapi.json) bytes"
+
+      - name: Create dist directory
+        run: mkdir -p dist/mcp dist/guides
+
+      - name: Generate Redoc HTML
+        run: npm run build:redoc
+
+      - name: Generate llms.txt files
+        run: npm run build:llms
+
+      - name: Generate MCP documentation
+        run: npm run build:mcp
+
+      - name: Build manual guides
+        run: node scripts/build-guides.js
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: seren-docs
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

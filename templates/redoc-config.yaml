@@ -1,0 +1,56 @@
+# Redoc configuration for SerenAI documentation
+# See: https://redocly.com/docs/api-reference-docs/configuration
+
+theme:
+  colors:
+    primary:
+      main: '#0066cc'
+    success:
+      main: '#28a745'
+    warning:
+      main: '#ffc107'
+    error:
+      main: '#dc3545'
+    text:
+      primary: '#333333'
+      secondary: '#666666'
+    http:
+      get: '#28a745'
+      post: '#0066cc'
+      put: '#ffc107'
+      delete: '#dc3545'
+      patch: '#9c27b0'
+
+  typography:
+    fontSize: '15px'
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+    headings:
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+    code:
+      fontSize: '14px'
+      fontFamily: '"SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", monospace'
+
+  sidebar:
+    backgroundColor: '#fafafa'
+    width: '280px'
+
+  rightPanel:
+    backgroundColor: '#1a1a2e'
+
+  logo:
+    gutter: '20px'
+
+# Feature flags
+hideDownloadButton: false
+hideHostname: false
+hideLoading: false
+hideSingleRequestSampleTab: false
+expandResponses: '200,201'
+requiredPropsFirst: true
+sortPropsAlphabetically: false
+jsonSampleExpandLevel: 2
+pathInMiddlePanel: true
+nativeScrollbars: true
+
+# Custom HTML options
+title: 'SerenAI API Documentation'
