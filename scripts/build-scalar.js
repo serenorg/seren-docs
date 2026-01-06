@@ -13,9 +13,16 @@ function generateScalarHtml() {
   // Read OpenAPI spec and embed it inline for better performance
   let specContent = '{}';
   try {
-    specContent = fs.readFileSync(OPENAPI_PATH, 'utf-8');
-    // Validate it's valid JSON
-    JSON.parse(specContent);
+    const rawSpec = fs.readFileSync(OPENAPI_PATH, 'utf-8');
+    const spec = JSON.parse(rawSpec);
+
+    // Override branding to SerenAI
+    if (spec.info) {
+      spec.info.title = 'SerenAI API';
+      spec.info.description = 'Pay Per Call Agentic Commerce for public and private data';
+    }
+
+    specContent = JSON.stringify(spec);
   } catch (err) {
     console.error(`Warning: Could not load OpenAPI spec: ${err.message}`);
     console.log('Using placeholder spec');
