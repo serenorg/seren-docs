@@ -69,9 +69,11 @@ https://api.serendb.com
 
 ### Agent Marketplace
 - \`GET /agent/publishers\` - List available data publishers
+- \`POST /agent/publishers\` - Create a new publisher (API key auth)
 - \`GET /agent/publishers/{slug}\` - Get publisher details
 - \`POST /agent/query\` - Execute paid query against publisher
 - \`GET /agent/balance\` - Check SerenBucks balance
+- \`POST /agent/deposit\` - Deposit SerenBucks via Stripe checkout
 
 ### Endpoints (Compute)
 - \`POST /projects/{project_id}/branches/{branch_id}/endpoints\` - Create endpoint
