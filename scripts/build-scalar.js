@@ -22,6 +22,16 @@ function generateScalarHtml() {
       spec.info.description = 'Pay Per Call Agentic Commerce for public and private data';
     }
 
+    // Reorder tags to put "agent" first (most important for AI agent users)
+    if (spec.tags && Array.isArray(spec.tags)) {
+      const agentTag = spec.tags.find(t => t.name === 'agent');
+      const otherTags = spec.tags.filter(t => t.name !== 'agent');
+      if (agentTag) {
+        spec.tags = [agentTag, ...otherTags];
+        console.log('Reordered tags: agent moved to first position');
+      }
+    }
+
     specContent = JSON.stringify(spec);
   } catch (err) {
     console.error(`Warning: Could not load OpenAPI spec: ${err.message}`);
