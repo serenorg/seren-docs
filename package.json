@@ -7,7 +7,7 @@
     "build:api": "node scripts/build-scalar.js",
     "build:llms": "node scripts/generate-llms-txt.js",
     "build:mcp": "node scripts/generate-mcp-docs.js",
-    "fetch:openapi": "curl -s -o openapi.json https://raw.githubusercontent.com/serenorg/serencore/main/seren-core/openapi.json",
+    "fetch:openapi": "cp ../serencore/seren-core/openapi.json openapi.json",
     "dev": "npx @scalar/cli serve openapi.json --port 3000",
     "clean": "rm -rf dist && mkdir -p dist"
   },
