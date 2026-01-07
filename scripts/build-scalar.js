@@ -94,14 +94,14 @@ function generateScalarHtml() {
 <body>
   <div class="seren-header">
     <div style="display: flex; align-items: center;">
-      <h1>SerenAI</h1>
+      <a href="https://serendb.com" target="_blank" style="color: white; text-decoration: none;"><h1>SerenAI</h1></a>
       <span class="tagline">Pay Per Call Agentic Commerce</span>
     </div>
     <nav>
       <a href="/mcp/">MCP Server</a>
       <a href="/guides/">Guides</a>
       <a href="/llms.txt">llms.txt</a>
-      <a href="https://serendb.com" target="_blank">Dashboard</a>
+      <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </div>
 
