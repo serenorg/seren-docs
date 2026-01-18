@@ -971,7 +971,7 @@ function generateInstallHtml() {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">MCP Server</a>
+      <a href="/mcp/">Install MCP</a>
       <a href="/guides/">Guides</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
@@ -1107,7 +1107,7 @@ function generateToolsHtml(toolsJson) {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">MCP Server</a>
+      <a href="/mcp/">Install MCP</a>
       <a href="/guides/">Guides</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
