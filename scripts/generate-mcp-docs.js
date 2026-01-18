@@ -7,10 +7,9 @@ const path = require('path');
 
 const DIST_PATH = path.join(__dirname, '..', 'dist', 'mcp');
 
-// MCP tool definitions extracted from seren-mcp
-// These are manually maintained until we have automated extraction
+// Complete MCP tool definitions - 63 tools across 13 categories
 const MCP_TOOLS = [
-  // Project Management
+  // ============ Projects ============
   {
     name: 'list_projects',
     description: 'List all Seren projects accessible to the authenticated user',
@@ -35,6 +34,17 @@ const MCP_TOOLS = [
     }
   },
   {
+    name: 'update_project',
+    description: 'Update a project\'s settings including name, security options, and compute defaults',
+    category: 'Projects',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      name: { type: 'string', required: false, description: 'New project name' },
+      compute_unit_min: { type: 'integer', required: false },
+      compute_unit_max: { type: 'integer', required: false }
+    }
+  },
+  {
     name: 'delete_project',
     description: 'Delete a Seren project',
     category: 'Projects',
@@ -43,7 +53,7 @@ const MCP_TOOLS = [
     }
   },
 
-  // Branch Management
+  // ============ Branches ============
   {
     name: 'list_branches',
     description: 'List branches for a project',
@@ -72,6 +82,44 @@ const MCP_TOOLS = [
     }
   },
   {
+    name: 'rename_branch',
+    description: 'Rename a branch',
+    category: 'Branches',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      name: { type: 'string', required: true, description: 'New branch name' }
+    }
+  },
+  {
+    name: 'reset_branch',
+    description: 'Reset a branch to its parent\'s latest state (destroys all data on the branch)',
+    category: 'Branches',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'set_branch_expiration',
+    description: 'Set or remove branch expiration date',
+    category: 'Branches',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      expires_at: { type: 'string', required: false, description: 'Expiration date in RFC3339 format, or null to remove' }
+    }
+  },
+  {
+    name: 'set_default_branch',
+    description: 'Set a branch as the default branch for the project',
+    category: 'Branches',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
     name: 'delete_branch',
     description: 'Delete a branch',
     category: 'Branches',
@@ -81,7 +129,79 @@ const MCP_TOOLS = [
     }
   },
 
-  // SQL Execution
+  // ============ Databases ============
+  {
+    name: 'list_all_databases',
+    description: 'List all databases across all projects with project and branch names',
+    category: 'Databases',
+    parameters: {}
+  },
+  {
+    name: 'list_databases',
+    description: 'List all databases in a branch',
+    category: 'Databases',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'get_database',
+    description: 'Get details about a specific database',
+    category: 'Databases',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      database_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'create_database',
+    description: 'Create a new database in a branch',
+    category: 'Databases',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      name: { type: 'string', required: true }
+    }
+  },
+  {
+    name: 'delete_database',
+    description: 'Delete a database from a branch',
+    category: 'Databases',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      database_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+
+  // ============ Schema ============
+  {
+    name: 'get_database_tables',
+    description: 'List tables in a database schema',
+    category: 'Schema',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      database: { type: 'string', required: true },
+      schema: { type: 'string', required: false, default: 'public' }
+    }
+  },
+  {
+    name: 'describe_table_schema',
+    description: 'Get schema information for a table',
+    category: 'Schema',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      database: { type: 'string', required: true },
+      table_name: { type: 'string', required: true },
+      schema: { type: 'string', required: false, default: 'public' }
+    }
+  },
+
+  // ============ SQL ============
   {
     name: 'run_sql',
     description: 'Execute a SQL query against a database',
@@ -116,41 +236,7 @@ const MCP_TOOLS = [
     }
   },
 
-  // Database Schema
-  {
-    name: 'list_databases',
-    description: 'List all databases in a branch',
-    category: 'Schema',
-    parameters: {
-      project_id: { type: 'string', format: 'uuid', required: true },
-      branch_id: { type: 'string', format: 'uuid', required: true }
-    }
-  },
-  {
-    name: 'get_database_tables',
-    description: 'List tables in a database schema',
-    category: 'Schema',
-    parameters: {
-      project_id: { type: 'string', format: 'uuid', required: true },
-      branch_id: { type: 'string', format: 'uuid', required: true },
-      database: { type: 'string', required: true },
-      schema: { type: 'string', required: false, default: 'public' }
-    }
-  },
-  {
-    name: 'describe_table_schema',
-    description: 'Get schema information for a table',
-    category: 'Schema',
-    parameters: {
-      project_id: { type: 'string', format: 'uuid', required: true },
-      branch_id: { type: 'string', format: 'uuid', required: true },
-      database: { type: 'string', required: true },
-      table_name: { type: 'string', required: true },
-      schema: { type: 'string', required: false, default: 'public' }
-    }
-  },
-
-  // Endpoints (Compute)
+  // ============ Endpoints ============
   {
     name: 'list_endpoints',
     description: 'List all endpoints for a branch',
@@ -169,6 +255,29 @@ const MCP_TOOLS = [
       branch_id: { type: 'string', format: 'uuid', required: true },
       autoscaling_min: { type: 'integer', required: false },
       autoscaling_max: { type: 'integer', required: false }
+    }
+  },
+  {
+    name: 'get_endpoint_status',
+    description: 'Get the current status of an endpoint (running, suspended, etc.)',
+    category: 'Endpoints',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      endpoint_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'update_endpoint',
+    description: 'Update an endpoint\'s settings including autoscaling and suspend timeout',
+    category: 'Endpoints',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      endpoint_id: { type: 'string', format: 'uuid', required: true },
+      autoscaling_min: { type: 'integer', required: false },
+      autoscaling_max: { type: 'integer', required: false },
+      suspend_timeout_seconds: { type: 'integer', required: false }
     }
   },
   {
@@ -191,11 +300,131 @@ const MCP_TOOLS = [
       endpoint_id: { type: 'string', format: 'uuid', required: true }
     }
   },
+  {
+    name: 'restart_endpoint',
+    description: 'Restart an endpoint (rolling restart via Kubernetes)',
+    category: 'Endpoints',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      endpoint_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'delete_endpoint',
+    description: 'Delete an endpoint',
+    category: 'Endpoints',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      endpoint_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
 
-  // Agent Marketplace
+  // ============ Roles ============
+  {
+    name: 'list_roles',
+    description: 'List all roles in a branch',
+    category: 'Roles',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'create_role',
+    description: 'Create a new database role on a branch',
+    category: 'Roles',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      name: { type: 'string', required: true, description: 'Role name' }
+    }
+  },
+  {
+    name: 'reset_role_password',
+    description: 'Reset a database role\'s password, generating a new secure password',
+    category: 'Roles',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      role_id: { type: 'string', format: 'uuid', required: true },
+      password: { type: 'string', required: true, description: 'New password for the role' }
+    }
+  },
+  {
+    name: 'reveal_role_password',
+    description: 'Reveal the current password for a database role',
+    category: 'Roles',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      role_name: { type: 'string', required: true }
+    }
+  },
+  {
+    name: 'delete_role',
+    description: 'Delete a database role from a branch',
+    category: 'Roles',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      role_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+
+  // ============ Connection ============
+  {
+    name: 'get_connection_string',
+    description: 'Get connection string for a branch',
+    category: 'Connection',
+    parameters: {
+      project_id: { type: 'string', format: 'uuid', required: true },
+      branch_id: { type: 'string', format: 'uuid', required: true },
+      database: { type: 'string', required: false },
+      pooled: { type: 'boolean', required: false, description: 'Return pooled connection' },
+      role: { type: 'string', required: false, description: 'PostgreSQL role/username' }
+    }
+  },
+
+  // ============ Organizations & API Keys ============
+  {
+    name: 'list_organizations',
+    description: 'List organizations accessible to the authenticated user',
+    category: 'Organizations',
+    parameters: {}
+  },
+  {
+    name: 'list_api_keys',
+    description: 'List all API keys for an organization',
+    category: 'Organizations',
+    parameters: {
+      organization_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+  {
+    name: 'create_api_key',
+    description: 'Create a new API key for an organization',
+    category: 'Organizations',
+    parameters: {
+      organization_id: { type: 'string', format: 'uuid', required: true },
+      name: { type: 'string', required: true },
+      expires_in_days: { type: 'integer', required: false }
+    }
+  },
+  {
+    name: 'revoke_api_key',
+    description: 'Revoke an API key',
+    category: 'Organizations',
+    parameters: {
+      organization_id: { type: 'string', format: 'uuid', required: true },
+      key_id: { type: 'string', format: 'uuid', required: true }
+    }
+  },
+
+  // ============ Marketplace ============
   {
     name: 'list_agent_publishers',
-    description: 'List all active publishers in the agent marketplace',
+    description: 'List active publishers in the agent store',
     category: 'Marketplace',
     parameters: {
       search: { type: 'string', required: false },
@@ -206,15 +435,25 @@ const MCP_TOOLS = [
   },
   {
     name: 'get_agent_publisher',
-    description: 'Get details about a specific publisher including pricing info',
+    description: 'Get details about a specific publisher including pricing info by slug',
     category: 'Marketplace',
     parameters: {
       slug: { type: 'string', required: true }
     }
   },
   {
+    name: 'suggest_for_task',
+    description: 'Get publisher and agent recommendations for a task',
+    category: 'Marketplace',
+    parameters: {
+      query: { type: 'string', required: true, description: 'The task to find publishers for' },
+      type: { type: 'string', required: false, description: 'publisher, agent, or both' },
+      limit: { type: 'integer', required: false }
+    }
+  },
+  {
     name: 'execute_paid_query',
-    description: 'Execute a paid SQL query against a publisher database',
+    description: 'Execute a paid SQL query against a publisher\'s database',
     category: 'Marketplace',
     parameters: {
       publisher: { type: 'string', required: true, description: 'Publisher slug or UUID' },
@@ -225,7 +464,19 @@ const MCP_TOOLS = [
   },
   {
     name: 'execute_paid_api',
-    description: 'Execute a paid API request against a publisher endpoint',
+    description: 'Execute a paid API request against a publisher\'s endpoint',
+    category: 'Marketplace',
+    parameters: {
+      publisher: { type: 'string', required: true },
+      method: { type: 'string', required: false, default: 'POST' },
+      path: { type: 'string', required: false },
+      body: { type: 'object', required: false },
+      confirm: { type: 'boolean', required: false, default: false }
+    }
+  },
+  {
+    name: 'execute_paid_api_stream',
+    description: 'Execute a paid streaming API request against a publisher\'s endpoint',
     category: 'Marketplace',
     parameters: {
       publisher: { type: 'string', required: true },
@@ -244,8 +495,91 @@ const MCP_TOOLS = [
       query: { type: 'string', required: true }
     }
   },
+  {
+    name: 'get_supported',
+    description: 'Get supported payment protocols and configuration',
+    category: 'Marketplace',
+    parameters: {}
+  },
 
-  // Payments & Balance
+  // ============ Publishers (Admin) ============
+  {
+    name: 'create_publisher',
+    description: 'Create a new publisher in the agent store',
+    category: 'Publishers',
+    parameters: {
+      name: { type: 'string', required: true, description: 'Publisher display name' },
+      slug: { type: 'string', required: true, description: 'URL-friendly slug' },
+      wallet_address: { type: 'string', required: true, description: 'Wallet address for payments' },
+      wallet_network_id: { type: 'string', required: true, description: 'Network ID (CAIP-2 format)' }
+    }
+  },
+  {
+    name: 'update_publisher',
+    description: 'Update an existing publisher\'s details',
+    category: 'Publishers',
+    parameters: {
+      slug: { type: 'string', required: true },
+      name: { type: 'string', required: false },
+      description: { type: 'string', required: false },
+      is_active: { type: 'boolean', required: false }
+    }
+  },
+  {
+    name: 'update_publisher_pricing',
+    description: 'Update a publisher\'s pricing configuration',
+    category: 'Publishers',
+    parameters: {
+      slug: { type: 'string', required: true },
+      price_per_call: { type: 'string', required: false, description: 'Price per API call (decimal string)' },
+      base_price_per_1000_rows: { type: 'string', required: false },
+      min_charge: { type: 'string', required: false },
+      max_charge: { type: 'string', required: false }
+    }
+  },
+  {
+    name: 'upload_publisher_logo',
+    description: 'Upload a logo image for a publisher',
+    category: 'Publishers',
+    parameters: {
+      slug: { type: 'string', required: true },
+      logo: { type: 'string', required: true, description: 'Base64 encoded image' },
+      content_type: { type: 'string', required: true, description: 'image/png, image/jpeg, etc.' }
+    }
+  },
+
+  // ============ Agent Templates ============
+  {
+    name: 'list_agent_templates',
+    description: 'List available agent templates in the catalog',
+    category: 'Templates',
+    parameters: {
+      search: { type: 'string', required: false },
+      language: { type: 'string', required: false, description: 'python, typescript, rust' },
+      limit: { type: 'integer', required: false },
+      offset: { type: 'integer', required: false }
+    }
+  },
+  {
+    name: 'get_agent_template',
+    description: 'Get details about a specific agent template by slug',
+    category: 'Templates',
+    parameters: {
+      slug: { type: 'string', required: true }
+    }
+  },
+  {
+    name: 'invoke_agent_template',
+    description: 'Invoke an agent template with input data',
+    category: 'Templates',
+    parameters: {
+      slug: { type: 'string', required: true },
+      input: { type: 'object', required: true, description: 'Input data for the template' },
+      confirm: { type: 'boolean', required: false, default: false }
+    }
+  },
+
+  // ============ Payments ============
   {
     name: 'get_prepaid_balance',
     description: 'Get your SerenBucks balance',
@@ -268,6 +602,36 @@ const MCP_TOOLS = [
     parameters: {
       amount_usd: { type: 'number', required: true, description: 'Amount in USD (minimum $5.00)' }
     }
+  },
+  {
+    name: 'get_x402_deposit_requirements',
+    description: 'Get x402 on-chain deposit requirements for depositing USDC',
+    category: 'Payments',
+    parameters: {
+      publisher: { type: 'string', required: true },
+      amount: { type: 'string', required: true, description: 'Amount to deposit (decimal string)' },
+      agent_wallet: { type: 'string', required: true, description: 'Agent wallet address' }
+    }
+  },
+
+  // ============ Wallet ============
+  {
+    name: 'get_wallet_status',
+    description: 'Get complete wallet status including SerenBucks and on-chain USDC balance',
+    category: 'Wallet',
+    parameters: {}
+  },
+  {
+    name: 'has_local_wallet',
+    description: 'Check if a local wallet is configured',
+    category: 'Wallet',
+    parameters: {}
+  },
+  {
+    name: 'get_local_wallet_address',
+    description: 'Get the local wallet address (requires WALLET_PRIVATE_KEY)',
+    category: 'Wallet',
+    parameters: {}
   }
 ];
 
@@ -349,6 +713,35 @@ function generateToolsJson() {
   };
 }
 
+// Category display order - marketplace/payments first, then database management
+const CATEGORY_ORDER = [
+  'Marketplace',
+  'Publishers',
+  'Templates',
+  'Payments',
+  'Wallet',
+  'Projects',
+  'Databases',
+  'Branches',
+  'SQL',
+  'Schema',
+  'Endpoints',
+  'Roles',
+  'Connection',
+  'Organizations'
+];
+
+function sortCategories(categories) {
+  return Object.entries(categories).sort(([a], [b]) => {
+    const aIndex = CATEGORY_ORDER.indexOf(a);
+    const bIndex = CATEGORY_ORDER.indexOf(b);
+    if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
+}
+
 function generateMcpLlmsTxt() {
   const categories = {};
   for (const tool of MCP_TOOLS) {
@@ -382,11 +775,11 @@ The installer auto-detects and configures: Claude Code, Claude Desktop, Cursor, 
 
 **[Full Installation Guide](/guides/mcp-install.html)** — Manual setup and troubleshooting.
 
-## Available Tools
+## Available Tools (${MCP_TOOLS.length})
 
 `;
 
-  for (const [category, tools] of Object.entries(categories).sort()) {
+  for (const [category, tools] of sortCategories(categories)) {
     content += `### ${category}\n\n`;
 
     for (const tool of tools) {
@@ -508,7 +901,7 @@ function generateInstallHtml() {
   <p>If you prefer to configure manually or need troubleshooting help, see the <a href="/guides/mcp-install.html">Full Installation Guide</a>.</p>
 
   <h2>After Installation</h2>
-  <p>Once installed, you'll have access to <a href="/mcp/tools.html">26 tools</a> for:</p>
+  <p>Once installed, you'll have access to <a href="/mcp/tools.html">${MCP_TOOLS.length} tools</a> for:</p>
   <ul>
     <li>Managing serverless Postgres databases</li>
     <li>Querying the agent marketplace with SerenBucks</li>
@@ -528,12 +921,13 @@ function generateToolsHtml(toolsJson) {
     categories[tool.category].push(tool);
   }
 
-  const categoryNav = Object.keys(categories).sort().map(cat =>
-    `<a href="#${cat.toLowerCase()}">${cat}</a>`
+  const sortedCats = sortCategories(categories);
+  const categoryNav = sortedCats.map(([cat, tools]) =>
+    `<a href="#${cat.toLowerCase()}">${cat} (${tools.length})</a>`
   ).join(' · ');
 
-  const toolsHtml = Object.entries(categories).sort().map(([category, tools]) => `
-    <h2 id="${category.toLowerCase()}">${category}</h2>
+  const toolsHtml = sortedCats.map(([category, tools]) => `
+    <h2 id="${category.toLowerCase()}">${category} <span style="font-size: 0.6em; color: #666;">(${tools.length} tools)</span></h2>
     ${tools.map(tool => `
     <div class="tool">
       <h4><code>${tool.name}</code></h4>
@@ -568,13 +962,14 @@ function generateToolsHtml(toolsJson) {
       padding: 0.8rem 1rem;
       border-radius: 5px;
       margin: 1rem 0;
+      line-height: 1.8;
     }
-    .category-nav a { margin-right: 0.8rem; }
+    .category-nav a { margin-right: 0.5rem; white-space: nowrap; }
   </style>
 </head>
 <body>
   <h1>Seren MCP Tools Reference</h1>
-  <p>${toolsJson.tools.length} tools for managing databases and querying the agent marketplace.</p>
+  <p>${toolsJson.tools.length} tools across ${Object.keys(categories).length} categories for managing databases and querying the agent marketplace.</p>
 
   <nav>
     <a href="/mcp/">Install</a>
