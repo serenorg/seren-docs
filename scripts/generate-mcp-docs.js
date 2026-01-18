@@ -692,10 +692,37 @@ const COMMON_STYLES = `
       transition: opacity 0.2s;
     }
     .seren-header nav a:hover { opacity: 1; }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .seren-header {
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 8px;
+      }
+      .seren-header .tagline {
+        display: none;
+      }
+      .seren-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .seren-header nav a {
+        margin-left: 8px;
+        margin-right: 8px;
+        font-size: 0.8rem;
+      }
+    }
     .content {
       max-width: 900px;
       margin: 0 auto;
       padding: 2rem;
+    }
+    @media (max-width: 768px) {
+      .content {
+        padding: 1rem;
+      }
     }
     h1 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
     h2 { margin-top: 2rem; }

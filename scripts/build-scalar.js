@@ -93,9 +93,36 @@ function generateScalarHtml() {
     .seren-header nav a:hover {
       opacity: 1;
     }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .seren-header {
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 8px;
+      }
+      .seren-header .tagline {
+        display: none;
+      }
+      .seren-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .seren-header nav a {
+        margin-left: 8px;
+        margin-right: 8px;
+        font-size: 0.8rem;
+      }
+    }
     /* Scalar container */
     #scalar-root {
       height: calc(100vh - 52px);
+    }
+    @media (max-width: 768px) {
+      #scalar-root {
+        height: calc(100vh - 80px);
+      }
     }
   </style>
 </head>
