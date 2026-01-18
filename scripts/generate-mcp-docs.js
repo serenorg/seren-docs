@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ABOUTME: Generates MCP tool documentation from seren-mcp source
-// ABOUTME: Creates tools.json schema and llms.txt for MCP tools
+// ABOUTME: Creates tools.json schema, llms.txt, and HTML pages for MCP tools
 
 const fs = require('fs');
 const path = require('path');
@@ -271,6 +271,54 @@ const MCP_TOOLS = [
   }
 ];
 
+const COMMON_STYLES = `
+    :root {
+      --primary: #0066cc;
+      --bg: #ffffff;
+      --text: #333333;
+      --code-bg: #f5f5f5;
+      --border: #e0e0e0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: var(--text);
+      background: var(--bg);
+    }
+    h1 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
+    h2 { margin-top: 2rem; }
+    h3 { margin-top: 1.5rem; }
+    code {
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+    pre {
+      background: var(--code-bg);
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    pre code { padding: 0; background: none; }
+    nav { background: var(--code-bg); padding: 1rem; border-radius: 5px; margin-bottom: 2rem; }
+    nav a { margin-right: 1rem; }
+    .tool {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    .tool h4 { margin: 0 0 0.5rem 0; color: var(--primary); }
+    .params { margin-left: 1rem; }
+    .param { margin: 0.3rem 0; }
+    .required { color: #cc0000; font-size: 0.8em; }
+    .optional { color: #666; font-size: 0.8em; }
+`;
+
 function generateToolsJson() {
   return {
     name: 'seren-mcp',
@@ -318,32 +366,21 @@ The SerenAI MCP server enables AI assistants to manage serverless Postgres datab
 
 ## Quick Install (90 seconds)
 
-Connect to our hosted MCP server—no downloads or API keys required.
+One command configures all your MCP clients automatically.
 
-### Claude Code
-\`\`\`bash
-claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user
-\`\`\`
-
-### Cursor / Windsurf / Other IDEs
-Add to your MCP config file:
-\`\`\`json
-{
-  "mcpServers": {
-    "seren": {
-      "url": "https://mcp.serendb.com/mcp",
-      "transport": "streamable-http"
-    }
-  }
-}
-\`\`\`
-
-### Claude Desktop
+### macOS / Linux
 \`\`\`bash
 curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
 \`\`\`
 
-**[Full Installation Guide](/guides/mcp-install.html)** — Platform-specific instructions for Cursor, Windsurf, OpenCode, Codex, Gemini CLI, and more.
+### Windows (PowerShell)
+\`\`\`powershell
+irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex
+\`\`\`
+
+The installer auto-detects and configures: Claude Code, Claude Desktop, Cursor, Windsurf, OpenCode, Codex, and Gemini CLI.
+
+**[Full Installation Guide](/guides/mcp-install.html)** — Manual setup and troubleshooting.
 
 ## Available Tools
 
@@ -394,122 +431,174 @@ Set \`READ_ONLY=true\` to block write operations (useful for shared deployments)
   return content;
 }
 
-function generateMcpHtml(toolsJson, llmsTxt) {
+// Installation page - clean and focused
+function generateInstallHtml() {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SerenAI MCP Server Documentation</title>
-  <style>
-    :root {
-      --primary: #0066cc;
-      --bg: #ffffff;
-      --text: #333333;
-      --code-bg: #f5f5f5;
-      --border: #e0e0e0;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem;
-      color: var(--text);
-      background: var(--bg);
-    }
-    h1 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
-    h2 { margin-top: 2rem; }
-    h3 { margin-top: 1.5rem; }
-    code {
+  <title>Install Seren MCP Server</title>
+  <style>${COMMON_STYLES}
+    .install-box {
       background: var(--code-bg);
-      padding: 0.2rem 0.4rem;
-      border-radius: 3px;
-      font-size: 0.9em;
-    }
-    pre {
-      background: var(--code-bg);
-      padding: 1rem;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    pre code { padding: 0; background: none; }
-    .tool {
-      border: 1px solid var(--border);
+      border: 2px solid var(--primary);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .install-box h3 { margin-top: 0; color: var(--primary); }
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       margin: 1rem 0;
     }
-    .tool h4 { margin: 0 0 0.5rem 0; color: var(--primary); }
-    .params { margin-left: 1rem; }
-    .param { margin: 0.3rem 0; }
-    .required { color: #cc0000; font-size: 0.8em; }
-    .optional { color: #666; font-size: 0.8em; }
-    nav { background: var(--code-bg); padding: 1rem; border-radius: 5px; margin-bottom: 2rem; }
-    nav a { margin-right: 1rem; }
+    .platform {
+      background: var(--code-bg);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9em;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
-  <h1>SerenAI MCP Server</h1>
-  <p><em>Model Context Protocol server for Pay Per Call Agentic Commerce</em></p>
+  <h1>Install Seren MCP Server</h1>
+  <p>Get Seren running in your AI assistant in under 90 seconds.</p>
 
   <nav>
-    <strong>Resources:</strong>
+    <a href="/mcp/tools.html">Tools Reference</a>
     <a href="/mcp/tools.json">tools.json</a>
     <a href="/mcp/llms.txt">llms.txt</a>
     <a href="/">API Docs</a>
   </nav>
 
-  <h2>Quick Install (90 seconds)</h2>
-  <p>Connect to our hosted MCP server—no downloads or API keys required.</p>
-
-  <h3>Claude Code</h3>
-  <pre><code>claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user</code></pre>
-
-  <h3>Cursor / Windsurf / Other IDEs</h3>
-  <p>Add to your MCP config file:</p>
-  <pre><code>{
-  "mcpServers": {
-    "seren": {
-      "url": "https://mcp.serendb.com/mcp",
-      "transport": "streamable-http"
-    }
-  }
-}</code></pre>
-
-  <h3>Claude Desktop</h3>
-  <pre><code>curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
-
-  <p><strong><a href="/guides/mcp-install.html">Full Installation Guide</a></strong> — Platform-specific instructions for Cursor, Windsurf, OpenCode, Codex, Gemini CLI, and more.</p>
-
-  <h2>Available Tools (${toolsJson.tools.length})</h2>
-
-  ${toolsJson.tools.map(tool => `
-  <div class="tool">
-    <h4><code>${tool.name}</code></h4>
-    <p>${tool.description}</p>
-    ${Object.keys(tool.inputSchema.properties).length > 0 ? `
-    <div class="params">
-      <strong>Parameters:</strong>
-      ${Object.entries(tool.inputSchema.properties).map(([name, schema]) => `
-      <div class="param">
-        <code>${name}</code>: ${schema.type}
-        <span class="${tool.inputSchema.required?.includes(name) ? 'required' : 'optional'}">
-          (${tool.inputSchema.required?.includes(name) ? 'required' : 'optional'})
-        </span>
-        ${schema.description ? `- ${schema.description}` : ''}
-      </div>
-      `).join('')}
-    </div>
-    ` : ''}
+  <div class="install-box">
+    <h3>macOS / Linux</h3>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
   </div>
-  `).join('')}
 
-  <h2>More Information</h2>
+  <div class="install-box">
+    <h3>Windows (PowerShell)</h3>
+    <pre><code>irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex</code></pre>
+  </div>
+
+  <h2>Supported Platforms</h2>
+  <p>The installer auto-detects and configures all installed clients:</p>
+  <div class="platforms">
+    <span class="platform">Claude Code</span>
+    <span class="platform">Claude Desktop</span>
+    <span class="platform">Cursor</span>
+    <span class="platform">Windsurf</span>
+    <span class="platform">OpenCode</span>
+    <span class="platform">Codex</span>
+    <span class="platform">Gemini CLI</span>
+  </div>
+
+  <h2>What Happens Next</h2>
+  <ol>
+    <li>The installer detects which AI tools you have installed</li>
+    <li>It configures each one to connect to <code>mcp.serendb.com</code></li>
+    <li>Restart your AI tool to activate Seren</li>
+    <li>On first use, you'll authenticate via OAuth at serendb.com</li>
+  </ol>
+
+  <h2>Need Manual Setup?</h2>
+  <p>If you prefer to configure manually or need troubleshooting help, see the <a href="/guides/mcp-install.html">Full Installation Guide</a>.</p>
+
+  <h2>After Installation</h2>
+  <p>Once installed, you'll have access to <a href="/mcp/tools.html">26 tools</a> for:</p>
   <ul>
-    <li><a href="/">Full API Documentation</a></li>
-    <li><a href="https://github.com/serenorg/seren">GitHub Repository</a></li>
+    <li>Managing serverless Postgres databases</li>
+    <li>Querying the agent marketplace with SerenBucks</li>
+    <li>Executing paid API calls to publishers like Firecrawl and Perplexity</li>
   </ul>
+</body>
+</html>`;
+}
+
+// Tools reference page - comprehensive listing
+function generateToolsHtml(toolsJson) {
+  const categories = {};
+  for (const tool of MCP_TOOLS) {
+    if (!categories[tool.category]) {
+      categories[tool.category] = [];
+    }
+    categories[tool.category].push(tool);
+  }
+
+  const categoryNav = Object.keys(categories).sort().map(cat =>
+    `<a href="#${cat.toLowerCase()}">${cat}</a>`
+  ).join(' · ');
+
+  const toolsHtml = Object.entries(categories).sort().map(([category, tools]) => `
+    <h2 id="${category.toLowerCase()}">${category}</h2>
+    ${tools.map(tool => `
+    <div class="tool">
+      <h4><code>${tool.name}</code></h4>
+      <p>${tool.description}</p>
+      ${Object.keys(tool.parameters).length > 0 ? `
+      <div class="params">
+        <strong>Parameters:</strong>
+        ${Object.entries(tool.parameters).map(([name, param]) => `
+        <div class="param">
+          <code>${name}</code>: ${param.type}
+          <span class="${param.required ? 'required' : 'optional'}">
+            (${param.required ? 'required' : 'optional'})
+          </span>
+          ${param.description ? `- ${param.description}` : ''}
+        </div>
+        `).join('')}
+      </div>
+      ` : ''}
+    </div>
+    `).join('')}
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seren MCP Tools Reference</title>
+  <style>${COMMON_STYLES}
+    .category-nav {
+      background: var(--code-bg);
+      padding: 0.8rem 1rem;
+      border-radius: 5px;
+      margin: 1rem 0;
+    }
+    .category-nav a { margin-right: 0.8rem; }
+  </style>
+</head>
+<body>
+  <h1>Seren MCP Tools Reference</h1>
+  <p>${toolsJson.tools.length} tools for managing databases and querying the agent marketplace.</p>
+
+  <nav>
+    <a href="/mcp/">Install</a>
+    <a href="/mcp/tools.json">tools.json</a>
+    <a href="/mcp/llms.txt">llms.txt</a>
+    <a href="/">API Docs</a>
+  </nav>
+
+  <div class="category-nav">
+    <strong>Jump to:</strong> ${categoryNav}
+  </div>
+
+  ${toolsHtml}
+
+  <h2>Authentication</h2>
+  <p>The MCP server supports three authentication modes:</p>
+  <ul>
+    <li><strong>API Key (stdio)</strong>: Set <code>API_KEY</code> environment variable</li>
+    <li><strong>Bearer Token (HTTP)</strong>: Set <code>AUTH_TOKEN</code> for simple auth</li>
+    <li><strong>OAuth 2.1 (HTTP)</strong>: Full OAuth flow with PKCE</li>
+  </ul>
+
+  <h2>Read-Only Mode</h2>
+  <p>Set <code>READ_ONLY=true</code> to block write operations (useful for shared deployments).</p>
 </body>
 </html>`;
 }
@@ -535,10 +624,15 @@ function main() {
   fs.writeFileSync(path.join(DIST_PATH, 'llms.txt'), llmsTxt);
   console.log(`Generated mcp/llms.txt (${llmsTxt.length} bytes)`);
 
-  // Generate HTML documentation
-  const html = generateMcpHtml(toolsJson, llmsTxt);
-  fs.writeFileSync(path.join(DIST_PATH, 'index.html'), html);
-  console.log(`Generated mcp/index.html`);
+  // Generate installation page (index.html)
+  const installHtml = generateInstallHtml();
+  fs.writeFileSync(path.join(DIST_PATH, 'index.html'), installHtml);
+  console.log(`Generated mcp/index.html (installation)`);
+
+  // Generate tools reference page
+  const toolsHtml = generateToolsHtml(toolsJson);
+  fs.writeFileSync(path.join(DIST_PATH, 'tools.html'), toolsHtml);
+  console.log(`Generated mcp/tools.html (reference)`);
 
   console.log('Done!');
 }

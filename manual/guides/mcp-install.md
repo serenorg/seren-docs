@@ -2,9 +2,27 @@
 
 Get Seren running in your AI assistant in under 90 seconds. No downloads, no API keys—just connect and go.
 
-## Quick Install by Platform
+## Universal Installer (Recommended)
 
-Jump to your platform:
+One command auto-detects and configures all your installed MCP clients.
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex
+```
+
+The installer configures: Claude Code, Claude Desktop, Cursor, Windsurf, OpenCode, Codex, and Gemini CLI.
+
+---
+
+## Manual Setup by Platform
+
+If you prefer manual configuration, jump to your platform:
 - [Claude Code](#claude-code) — One command
 - [Cursor](#cursor) — JSON config
 - [Windsurf](#windsurf) — JSON config
