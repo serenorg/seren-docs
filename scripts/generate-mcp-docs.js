@@ -933,6 +933,21 @@ function generateInstallHtml() {
     }
     .copy-btn:hover { background: #0052a3; }
     .copy-btn.copied { background: #28a745; }
+    @media (max-width: 768px) {
+      .install-box pre {
+        padding-right: 0;
+        padding-bottom: 3rem;
+      }
+      .install-box pre code {
+        word-break: break-all;
+        white-space: pre-wrap;
+      }
+      .copy-btn {
+        top: auto;
+        bottom: 0.5rem;
+        right: 0.5rem;
+      }
+    }
     .platforms {
       display: flex;
       flex-wrap: wrap;
