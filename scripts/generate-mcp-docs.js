@@ -643,18 +643,64 @@ const COMMON_STYLES = `
       --code-bg: #f5f5f5;
       --border: #e0e0e0;
     }
+    * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .seren-header {
+      background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .seren-header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      border: none;
+      color: white;
+      padding: 0;
+    }
+    .seren-header .tagline {
+      opacity: 0.9;
+      font-size: 0.875rem;
+      margin-left: 16px;
+    }
+    .seren-header nav {
+      background: none;
+      padding: 0;
+      margin: 0;
+      border-radius: 0;
+    }
+    .seren-header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 24px;
+      margin-right: 0;
+      font-size: 0.875rem;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    .seren-header nav a:hover { opacity: 1; }
+    .content {
       max-width: 900px;
       margin: 0 auto;
       padding: 2rem;
-      color: var(--text);
-      background: var(--bg);
     }
     h1 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
     h2 { margin-top: 2rem; }
     h3 { margin-top: 1.5rem; }
+    a { color: var(--primary); }
     code {
       background: var(--code-bg);
       padding: 0.2rem 0.4rem;
@@ -668,8 +714,6 @@ const COMMON_STYLES = `
       overflow-x: auto;
     }
     pre code { padding: 0; background: none; }
-    nav { background: var(--code-bg); padding: 1rem; border-radius: 5px; margin-bottom: 2rem; }
-    nav a { margin-right: 1rem; }
     .tool {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -878,17 +922,24 @@ function generateInstallHtml() {
   </style>
 </head>
 <body>
+  <div class="seren-header">
+    <div style="display: flex; align-items: center;">
+      <a href="https://serendb.com" target="_blank" style="color: white; text-decoration: none;"><h1>SerenAI</h1></a>
+      <span class="tagline">Pay Per Call Agentic Commerce</span>
+    </div>
+    <nav>
+      <a href="/">API Docs</a>
+      <a href="/mcp/">MCP Server</a>
+      <a href="/guides/">Guides</a>
+      <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+    </nav>
+  </div>
+
+  <div class="content">
   <h1>Install Seren MCP Server</h1>
   <p>Get Seren running in your AI assistant in under 90 seconds.</p>
 
-  <nav>
-    <a href="/">API Docs</a>
-    <a href="/mcp/">MCP Server</a>
-    <a href="/guides/">Guides</a>
-    <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
-  </nav>
-
-  <p style="margin-top: 1rem;"><a href="/mcp/tools.html">Tools Reference (${MCP_TOOLS.length})</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
+  <p><a href="/mcp/tools.html">Tools Reference (${MCP_TOOLS.length})</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
@@ -930,6 +981,8 @@ function generateInstallHtml() {
     <li>Querying the agent marketplace with SerenBucks</li>
     <li>Executing paid API calls to publishers like Firecrawl and Perplexity</li>
   </ul>
+
+  </div>
 
   <script>
   function copyCommand(btn) {
@@ -1005,17 +1058,24 @@ function generateToolsHtml(toolsJson) {
   </style>
 </head>
 <body>
+  <div class="seren-header">
+    <div style="display: flex; align-items: center;">
+      <a href="https://serendb.com" target="_blank" style="color: white; text-decoration: none;"><h1>SerenAI</h1></a>
+      <span class="tagline">Pay Per Call Agentic Commerce</span>
+    </div>
+    <nav>
+      <a href="/">API Docs</a>
+      <a href="/mcp/">MCP Server</a>
+      <a href="/guides/">Guides</a>
+      <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+    </nav>
+  </div>
+
+  <div class="content">
   <h1>Seren MCP Tools Reference</h1>
   <p>${toolsJson.tools.length} tools across ${Object.keys(categories).length} categories for managing databases and querying the agent marketplace.</p>
 
-  <nav>
-    <a href="/">API Docs</a>
-    <a href="/mcp/">MCP Server</a>
-    <a href="/guides/">Guides</a>
-    <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
-  </nav>
-
-  <p style="margin-top: 1rem;"><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
+  <p><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   <div class="category-nav">
     <strong>Jump to:</strong> ${categoryNav}
@@ -1033,6 +1093,7 @@ function generateToolsHtml(toolsJson) {
 
   <h2>Read-Only Mode</h2>
   <p>Set <code>READ_ONLY=true</code> to block write operations (useful for shared deployments).</p>
+  </div>
 </body>
 </html>`;
 }
