@@ -32,6 +32,14 @@ function generateScalarHtml() {
       }
     }
 
+    // Override server URL to point to production API
+    spec.servers = [
+      {
+        url: 'https://api.serendb.com',
+        description: 'Seren API'
+      }
+    ];
+
     specContent = JSON.stringify(spec);
   } catch (err) {
     console.error(`Warning: Could not load OpenAPI spec: ${err.message}`);
