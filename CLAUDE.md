@@ -4,49 +4,66 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-seren-docs is the documentation infrastructure for SerenAI, a "Pay Per Call Agentic Commerce" platform. It generates multiple documentation formats from OpenAPI specs and manual guides.
+seren-docs generates documentation for SerenAI from OpenAPI specs and manual guides. Output formats include interactive API docs (Scalar), llms.txt files, and MCP tool schemas.
 
 ## Commands
 
 ```bash
 npm install                    # Install dependencies
-npm run fetch:openapi          # Fetch latest OpenAPI spec from serencore
-npm run build                  # Build all documentation (orchestrates all steps)
-npm run build:api              # Generate Scalar API documentation only
-npm run build:llms             # Generate llms.txt files only
-npm run build:mcp              # Generate MCP documentation only
-npm run dev                    # Preview with Scalar on port 3000
-npm run clean                  # Clean dist directory
+npm run fetch:openapi          # Copy OpenAPI spec from ../serencore (requires sibling checkout)
+npm run build                  # Build all documentation (runs all steps below)
+npm run build:api              # Generate Scalar API docs → dist/index.html
+npm run build:llms             # Generate llms.txt → dist/llms.txt, dist/llms-full.txt
+npm run build:mcp              # Generate MCP docs → dist/mcp/tools.json, dist/mcp/llms.txt
+npm run dev                    # Preview Scalar docs on port 3000
+npm run clean                  # Delete and recreate dist/
 ```
+
+**No lint or test commands** - this is a pure documentation generator.
+
+## Local Development Prerequisite
+
+`npm run fetch:openapi` copies from `../serencore/seren-core/openapi.json`. For local development, either:
+
+1. Clone serencore as a sibling directory, or
+2. Manually place `openapi.json` in the project root
+
+CI handles this automatically by checking out the private serencore repo.
 
 ## Architecture
 
-**Documentation Pipeline:**
+```text
+openapi.json ─────────────┬──→ build-scalar.js ──→ dist/index.html
+(from serencore)          ├──→ generate-llms-txt.js ──→ dist/llms.txt, dist/llms-full.txt
+                          │
+manual/guides/*.md ───────┴──→ build-guides.js ──→ dist/guides/*.html
 
-1. **Inputs:**
-   - `openapi.json` - Fetched from serencore repository (gitignored)
-   - `manual/guides/*.md` - Hand-written markdown tutorials
-   - MCP tool definitions hardcoded in `scripts/generate-mcp-docs.js`
+scripts/generate-mcp-docs.js ──→ dist/mcp/tools.json, dist/mcp/llms.txt
+(31 hardcoded tool definitions)
+```
 
-2. **Build Scripts (`scripts/`):**
-   - `build.js` - Main orchestrator, runs all steps with graceful error handling
-   - `build-scalar.js` - OpenAPI → Interactive Scalar HTML
-   - `generate-llms-txt.js` - OpenAPI → LLM-optimized context files
-   - `generate-mcp-docs.js` - Generates MCP tool schemas and docs (contains 31 tool definitions)
-   - `build-guides.js` - Markdown → HTML with styling
+**build.js** orchestrates all steps with graceful error handling (continues on failures).
 
-3. **Outputs (`dist/`):**
-   - `index.html` - Scalar API documentation
-   - `llms.txt` & `llms-full.txt` - LLM context files
-   - `mcp/tools.json` & `mcp/llms.txt` - MCP server reference
-   - `guides/*.html` - Converted guide pages
-   - `_redirects` & `_headers` - Cloudflare Pages config
+## Key Files
 
-## Key Points
+| File                           | Purpose                                                                    |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| `scripts/generate-mcp-docs.js` | Contains all 31 MCP tool definitions inline - edit this to update MCP docs |
+| `scripts/generate-llms-txt.js` | `llms.txt` is mostly static; `llms-full.txt` parses OpenAPI endpoints      |
+| `manual/guides/quickstart.md`  | Only manual guide currently - add more `.md` files here                    |
+| `static/`                      | Optional - any files here are copied to `dist/` root                       |
 
-- **Don't edit `dist/`** - All content is auto-generated. Modify source files instead.
-- **API doc changes** - Update OpenAPI spec in serencore repository, not here.
-- **Guide changes** - Edit markdown files in `manual/guides/`.
-- **MCP tool changes** - Update `scripts/generate-mcp-docs.js` directly (31 tools in 7 categories).
-- **Deployment** - GitHub Actions deploys to Cloudflare Pages on push, schedule, and webhook triggers.
-- **OpenAPI spec is external** - Changes to serencore auto-trigger rebuilds via repository dispatch.
+## Update Workflows
+
+- **API docs change**: Update OpenAPI in serencore → triggers `repository_dispatch: openapi-updated`
+- **MCP tools change**: Edit `scripts/generate-mcp-docs.js` directly → push triggers rebuild
+- **Guide changes**: Edit `manual/guides/*.md` → push triggers rebuild
+- **Static assets**: Add to `static/` directory → copied during build
+
+## Deployment
+
+GitHub Actions deploys to Cloudflare Pages on:
+
+- Push to main (paths: scripts/, templates/, manual/)
+- `repository_dispatch` events from serencore/seren repos
+- Daily cron at midnight UTC

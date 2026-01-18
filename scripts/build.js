@@ -55,6 +55,12 @@ function createRedirects() {
 # Redirect /api/* to main docs
 /api/*  /:splat  301
 
+# Static files - serve directly (bypass SPA fallback)
+/install.sh  /install.sh  200
+/install.ps1  /install.ps1  200
+/llms.txt  /llms.txt  200
+/llms-full.txt  /llms-full.txt  200
+
 # SPA fallback
 /*  /index.html  200
 `.trim();

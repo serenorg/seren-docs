@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run fetch:openapi:*)",
+      "WebFetch(domain:docs.serendb.com)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gpgconf:*)",
+      "Bash(git push)",
+      "Bash(gh run list:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh run view:*)",
+      "Bash(npm run build:api:*)",
+      "mcp__seren__suggest_for_task",
+      "Bash(gh issue create:*)",
+      "mcp__seren__get_wallet_status",
+      "Bash(gh issue comment:*)",
+      "mcp__seren__list_agent_publishers",
+      "Bash(gh issue view:*)",
+      "Bash(python3:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git reset:*)",
+      "Bash(git push:*)",
+      "mcp__seren__run_sql",
+      "Bash(psql:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr comment:*)",
+      "mcp__seren__get_agent_publisher",
+      "mcp__seren__execute_paid_api",
+      "mcp__seren__list_projects"
+    ]
+  }
+}
