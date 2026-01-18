@@ -839,8 +839,29 @@ function generateInstallHtml() {
       border-radius: 8px;
       padding: 1.5rem;
       margin: 1.5rem 0;
+      position: relative;
     }
     .install-box h3 { margin-top: 0; color: var(--primary); }
+    .install-box pre {
+      position: relative;
+      margin: 0;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: #0052a3; }
+    .copy-btn.copied { background: #28a745; }
     .platforms {
       display: flex;
       flex-wrap: wrap;
@@ -869,12 +890,12 @@ function generateInstallHtml() {
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
+    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
   </div>
 
   <div class="install-box">
     <h3>Windows (PowerShell)</h3>
-    <pre><code>irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex</code></pre>
+    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex</code></pre>
   </div>
 
   <h2>Supported Platforms</h2>
@@ -907,6 +928,20 @@ function generateInstallHtml() {
     <li>Querying the agent marketplace with SerenBucks</li>
     <li>Executing paid API calls to publishers like Firecrawl and Perplexity</li>
   </ul>
+
+  <script>
+  function copyCommand(btn) {
+    const code = btn.nextElementSibling;
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  </script>
 </body>
 </html>`;
 }
