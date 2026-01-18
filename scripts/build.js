@@ -83,6 +83,15 @@ function createHeaders() {
   Access-Control-Allow-Origin: *
   Content-Type: application/json; charset=utf-8
 
+# Install scripts
+/install.sh
+  Access-Control-Allow-Origin: *
+  Content-Type: text/plain; charset=utf-8
+
+/install.ps1
+  Access-Control-Allow-Origin: *
+  Content-Type: text/plain; charset=utf-8
+
 # Cache control
 /*
   Cache-Control: public, max-age=3600

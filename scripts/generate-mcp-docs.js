@@ -807,12 +807,12 @@ One command configures all your MCP clients automatically.
 
 ### macOS / Linux
 \`\`\`bash
-curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
+curl -fsSL https://serendb.com/install.sh | bash
 \`\`\`
 
 ### Windows (PowerShell)
 \`\`\`powershell
-irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex
+irm https://serendb.com/install.ps1 | iex
 \`\`\`
 
 The installer auto-detects and configures: Claude Code, Claude Desktop, Cursor, Windsurf, OpenCode, Codex, and Gemini CLI.
@@ -942,12 +942,12 @@ function generateInstallHtml() {
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
-    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
+    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install.sh | bash</code></pre>
   </div>
 
   <div class="install-box">
     <h3>Windows (PowerShell)</h3>
-    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex</code></pre>
+    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://serendb.com/install.ps1 | iex</code></pre>
   </div>
 
   <h2>Supported Platforms</h2>

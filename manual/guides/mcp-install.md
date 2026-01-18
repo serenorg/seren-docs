@@ -8,12 +8,12 @@ One command auto-detects and configures all your installed MCP clients.
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
+curl -fsSL https://serendb.com/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex
+irm https://serendb.com/install.ps1 | iex
 ```
 
 The installer configures: Claude Code, Claude Desktop, Cursor, Windsurf, OpenCode, Codex, and Gemini CLI.
@@ -109,12 +109,12 @@ Claude Desktop cannot self-configure. Run the appropriate installer for your OS:
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
+curl -fsSL https://serendb.com/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.ps1 | iex
+irm https://serendb.com/install.ps1 | iex
 ```
 
 The script will:
