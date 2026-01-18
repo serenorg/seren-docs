@@ -882,11 +882,13 @@ function generateInstallHtml() {
   <p>Get Seren running in your AI assistant in under 90 seconds.</p>
 
   <nav>
-    <a href="/mcp/tools.html">Tools Reference</a>
-    <a href="/mcp/tools.json">tools.json</a>
-    <a href="/mcp/llms.txt">llms.txt</a>
     <a href="/">API Docs</a>
+    <a href="/mcp/">MCP Server</a>
+    <a href="/guides/">Guides</a>
+    <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
   </nav>
+
+  <p style="margin-top: 1rem;"><a href="/mcp/tools.html">Tools Reference (${MCP_TOOLS.length})</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
@@ -1007,11 +1009,13 @@ function generateToolsHtml(toolsJson) {
   <p>${toolsJson.tools.length} tools across ${Object.keys(categories).length} categories for managing databases and querying the agent marketplace.</p>
 
   <nav>
-    <a href="/mcp/">Install</a>
-    <a href="/mcp/tools.json">tools.json</a>
-    <a href="/mcp/llms.txt">llms.txt</a>
     <a href="/">API Docs</a>
+    <a href="/mcp/">MCP Server</a>
+    <a href="/guides/">Guides</a>
+    <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
   </nav>
+
+  <p style="margin-top: 1rem;"><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   <div class="category-nav">
     <strong>Jump to:</strong> ${categoryNav}
