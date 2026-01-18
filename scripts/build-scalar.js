@@ -101,6 +101,7 @@ function generateScalarHtml() {
       <a href="/">API Docs</a>
       <a href="/mcp/">MCP Server</a>
       <a href="/guides/">Guides</a>
+      <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </div>

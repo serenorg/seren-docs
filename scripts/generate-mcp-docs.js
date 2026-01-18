@@ -931,6 +931,7 @@ function generateInstallHtml() {
       <a href="/">API Docs</a>
       <a href="/mcp/">MCP Server</a>
       <a href="/guides/">Guides</a>
+      <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </div>
@@ -938,8 +939,6 @@ function generateInstallHtml() {
   <div class="content">
   <h1>Install Seren MCP Server</h1>
   <p>Get Seren running in your AI assistant in under 90 seconds.</p>
-
-  <p><a href="/mcp/tools.html">Tools Reference (${MCP_TOOLS.length})</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
@@ -975,12 +974,13 @@ function generateInstallHtml() {
   <p>If you prefer to configure manually or need troubleshooting help, see the <a href="/guides/mcp-install.html">Full Installation Guide</a>.</p>
 
   <h2>After Installation</h2>
-  <p>Once installed, you'll have access to <a href="/mcp/tools.html">${MCP_TOOLS.length} tools</a> for:</p>
+  <p>Once installed, you'll have access to <strong>${MCP_TOOLS.length} tools</strong> for:</p>
   <ul>
     <li>Managing serverless Postgres databases</li>
     <li>Querying the agent marketplace with SerenBucks</li>
     <li>Executing paid API calls to publishers like Firecrawl and Perplexity</li>
   </ul>
+  <p><a href="/mcp/tools.html">Tools Reference</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
 
   </div>
 
@@ -1067,6 +1067,7 @@ function generateToolsHtml(toolsJson) {
       <a href="/">API Docs</a>
       <a href="/mcp/">MCP Server</a>
       <a href="/guides/">Guides</a>
+      <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </div>
@@ -1075,7 +1076,7 @@ function generateToolsHtml(toolsJson) {
   <h1>Seren MCP Tools Reference</h1>
   <p>${toolsJson.tools.length} tools across ${Object.keys(categories).length} categories for managing databases and querying the agent marketplace.</p>
 
-  <p><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
+  <p><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">mcp/llms.txt</a></p>
 
   <div class="category-nav">
     <strong>Jump to:</strong> ${categoryNav}

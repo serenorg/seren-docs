@@ -88,8 +88,25 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
       border-radius: 5px;
       overflow-x: auto;
       border: 1px solid var(--border);
+      position: relative;
     }
     pre code { padding: 0; background: none; }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: #0052a3; }
+    .copy-btn.copied { background: #28a745; }
     blockquote {
       border-left: 4px solid var(--primary);
       margin-left: 0;
@@ -113,6 +130,7 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
       <a href="/">API Docs</a>
       <a href="/mcp/">MCP Server</a>
       <a href="/guides/">Guides</a>
+      <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </div>
@@ -122,6 +140,25 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
     </div>
     ${content}
   </div>
+  <script>
+  document.querySelectorAll('pre').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.onclick = () => {
+      const code = pre.querySelector('code') || pre;
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    };
+    pre.appendChild(btn);
+  });
+  </script>
 </body>
 </html>`;
 
