@@ -66,6 +66,7 @@ curl -X POST https://api.serendb.com/projects \
 
 ## Next Steps
 
+- [Install Seren MCP](/guides/mcp-install.html) - Connect your AI assistant in 90 seconds
 - [Explore the Agent Marketplace](/guides/marketplace.html) - Query public datasets with SerenBucks
-- [Set up the MCP Server](/mcp/) - Integrate with AI assistants
-- [API Reference](/) - Complete endpoint documentation
+- [MCP Tools Reference](/mcp/) - Available MCP tools
+- [API Reference](/) - Complete REST API documentation

@@ -316,31 +316,34 @@ function generateMcpLlmsTxt() {
 
 The SerenAI MCP server enables AI assistants to manage serverless Postgres databases and query the agent marketplace with SerenBucks micropayments.
 
-## Installation
+## Quick Install (90 seconds)
 
-### Claude Desktop (stdio mode)
+Connect to our hosted MCP server—no downloads or API keys required.
 
-Add to \`~/.config/claude/claude_desktop_config.json\`:
+### Claude Code
+\`\`\`bash
+claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user
+\`\`\`
 
+### Cursor / Windsurf / Other IDEs
+Add to your MCP config file:
 \`\`\`json
 {
   "mcpServers": {
     "seren": {
-      "command": "seren-mcp",
-      "args": ["start"],
-      "env": {
-        "API_KEY": "seren_live_xxxxx"
-      }
+      "url": "https://mcp.serendb.com/mcp",
+      "transport": "streamable-http"
     }
   }
 }
 \`\`\`
 
-### HTTP Mode (with OAuth)
-
+### Claude Desktop
 \`\`\`bash
-seren-mcp start:oauth --port 3000
+curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash
 \`\`\`
+
+**[Full Installation Guide](/guides/mcp-install.html)** — Platform-specific instructions for Cursor, Windsurf, OpenCode, Codex, Gemini CLI, and more.
 
 ## Available Tools
 
@@ -457,20 +460,27 @@ function generateMcpHtml(toolsJson, llmsTxt) {
     <a href="/">API Docs</a>
   </nav>
 
-  <h2>Installation</h2>
+  <h2>Quick Install (90 seconds)</h2>
+  <p>Connect to our hosted MCP server—no downloads or API keys required.</p>
 
-  <h3>Claude Desktop (stdio mode)</h3>
+  <h3>Claude Code</h3>
+  <pre><code>claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user</code></pre>
+
+  <h3>Cursor / Windsurf / Other IDEs</h3>
+  <p>Add to your MCP config file:</p>
   <pre><code>{
   "mcpServers": {
     "seren": {
-      "command": "seren-mcp",
-      "args": ["start"],
-      "env": {
-        "API_KEY": "seren_live_xxxxx"
-      }
+      "url": "https://mcp.serendb.com/mcp",
+      "transport": "streamable-http"
     }
   }
 }</code></pre>
+
+  <h3>Claude Desktop</h3>
+  <pre><code>curl -fsSL https://raw.githubusercontent.com/serenorg/seren-installer/main/src/scripts/install.sh | bash</code></pre>
+
+  <p><strong><a href="/guides/mcp-install.html">Full Installation Guide</a></strong> — Platform-specific instructions for Cursor, Windsurf, OpenCode, Codex, Gemini CLI, and more.</p>
 
   <h2>Available Tools (${toolsJson.tools.length})</h2>
 
