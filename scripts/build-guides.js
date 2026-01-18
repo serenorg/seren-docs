@@ -134,6 +134,20 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
     }
     .copy-btn:hover { background: #0052a3; }
     .copy-btn.copied { background: #28a745; }
+    @media (max-width: 768px) {
+      pre {
+        padding-bottom: 3rem;
+      }
+      pre code {
+        word-break: break-all;
+        white-space: pre-wrap;
+      }
+      .copy-btn {
+        top: auto;
+        bottom: 0.5rem;
+        right: 0.5rem;
+      }
+    }
     blockquote {
       border-left: 4px solid var(--primary);
       margin-left: 0;
