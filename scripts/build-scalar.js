@@ -5,15 +5,38 @@
 const fs = require('fs');
 const path = require('path');
 
+const OPENAPI_URL = 'https://api.serendb.com/openapi.json';
 const OPENAPI_PATH = path.join(__dirname, '..', 'openapi.json');
 const DIST_PATH = path.join(__dirname, '..', 'dist');
 const OUTPUT_PATH = path.join(DIST_PATH, 'index.html');
 
-function generateScalarHtml() {
+async function fetchOpenApiSpec() {
+  // Try local file first, then fetch from API
+  if (fs.existsSync(OPENAPI_PATH)) {
+    console.log('Using local openapi.json');
+    return fs.readFileSync(OPENAPI_PATH, 'utf-8');
+  }
+
+  console.log(`Fetching OpenAPI spec from ${OPENAPI_URL}...`);
+  const headers = {};
+  if (process.env.SEREN_API_KEY) {
+    headers['Authorization'] = `Bearer ${process.env.SEREN_API_KEY}`;
+    console.log('Using SEREN_API_KEY for authentication');
+  }
+  const response = await fetch(OPENAPI_URL, { headers });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch OpenAPI spec: ${response.status}`);
+  }
+  const spec = await response.text();
+  console.log(`Fetched OpenAPI spec (${spec.length} bytes)`);
+  return spec;
+}
+
+async function generateScalarHtml() {
   // Read OpenAPI spec and embed it inline for better performance
   let specContent = '{}';
   try {
-    const rawSpec = fs.readFileSync(OPENAPI_PATH, 'utf-8');
+    const rawSpec = await fetchOpenApiSpec();
     const spec = JSON.parse(rawSpec);
 
     // Override branding to SerenAI
@@ -171,7 +194,7 @@ ${specContent}
 </html>`;
 }
 
-function main() {
+async function main() {
   console.log('Generating Scalar API documentation...');
 
   // Ensure dist directory exists
@@ -179,11 +202,14 @@ function main() {
     fs.mkdirSync(DIST_PATH, { recursive: true });
   }
 
-  const html = generateScalarHtml();
+  const html = await generateScalarHtml();
   fs.writeFileSync(OUTPUT_PATH, html);
 
   const stats = fs.statSync(OUTPUT_PATH);
   console.log(`Generated index.html (${(stats.size / 1024).toFixed(1)}KB)`);
 }
 
-main();
+main().catch(err => {
+  console.error('Build failed:', err.message);
+  process.exit(1);
+});
