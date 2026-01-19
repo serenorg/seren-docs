@@ -19,9 +19,12 @@ async function fetchOpenApiSpec() {
 
   console.log(`Fetching OpenAPI spec from ${OPENAPI_URL}...`);
   const headers = {};
-  if (process.env.GITHUB_TOKEN) {
-    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
-    console.log('Using GITHUB_TOKEN for authentication');
+  const token = process.env.GH_PAT || process.env.GITHUB_TOKEN;
+  if (token) {
+    headers['Authorization'] = `token ${token}`;
+    console.log('Using GitHub token for authentication');
+  } else {
+    console.log('WARNING: No GitHub token found in environment');
   }
   const response = await fetch(OPENAPI_URL, { headers });
   if (!response.ok) {
