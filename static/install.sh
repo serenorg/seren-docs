@@ -226,7 +226,7 @@ configure_claude_code() {
         return 0
     fi
 
-    if claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user 2>/dev/null; then
+    if claude mcp add --transport http -s user seren https://mcp.serendb.com/mcp 2>/dev/null; then
         echo "  ✓ Configured successfully"
         CONFIGURED="$CONFIGURED Claude-Code"
     else

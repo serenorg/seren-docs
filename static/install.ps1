@@ -203,7 +203,7 @@ function Configure-ClaudeCode {
     }
 
     try {
-        claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user 2>$null
+        claude mcp add --transport http -s user seren https://mcp.serendb.com/mcp 2>$null
         Write-Host "  ✓ Configured successfully"
         $script:Configured += "Claude-Code"
     } catch {

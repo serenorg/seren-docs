@@ -168,7 +168,6 @@ Add to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.seren]
 url = "https://mcp.serendb.com/mcp"
-transport = "streamable-http"
 enabled = true
 ```
 

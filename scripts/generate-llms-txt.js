@@ -190,11 +190,15 @@ POST /projects/{project_id}/branches/{branch_id}/sql
 
 ## Integration Options
 
-**MCP Server** (recommended for Claude, Cursor, GPT):
+**MCP Server** (recommended for Claude, Cursor, Windsurf):
 \`\`\`bash
-npx @anthropic/seren-mcp
+# Universal installer (auto-detects all MCP clients)
+curl -fsSL https://serendb.com/install.sh | bash
+
+# Or manually for Claude Code:
+claude mcp add --transport http -s user seren https://mcp.serendb.com/mcp
 \`\`\`
-63 tools with type-safe parameters. See [MCP Documentation](/mcp/).
+See [MCP Installation Guide](/guides/mcp-install.html) for all platforms.
 
 **REST API** (for custom agents):
 Use the endpoints documented above with any HTTP client.
