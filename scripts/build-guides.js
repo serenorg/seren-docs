@@ -6,6 +6,22 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 
+// Configure marked to generate heading IDs for anchor links
+marked.use({
+  renderer: {
+    heading(text, level) {
+      // Generate slug from heading text (lowercase, spaces to hyphens, remove special chars)
+      const slug = text.toLowerCase()
+        .replace(/<[^>]+>/g, '')  // Remove HTML tags
+        .replace(/[^\w\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-')     // Replace spaces with hyphens
+        .replace(/-+/g, '-')      // Replace multiple hyphens with single
+        .trim();
+      return `<h${level} id="${slug}">${text}</h${level}>\n`;
+    }
+  }
+});
+
 const MANUAL_DIR = path.join(__dirname, '..', 'manual');
 const GUIDES_DIR = path.join(MANUAL_DIR, 'guides');
 const MCP_DIR = path.join(MANUAL_DIR, 'mcp');
