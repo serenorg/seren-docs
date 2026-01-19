@@ -18,123 +18,214 @@ function generateCoreLlmsTxt(spec) {
 
   return `# SerenAI
 
-> Pay Per Call Agentic Commerce for public and private data
+> Pay-per-query data marketplace for AI agents. Discover 75+ data publishers and query them with micropayments.
 
-SerenAI provides serverless Postgres databases with pay-per-query access for AI agents. Agents can discover and query publisher databases using SerenBucks micropayments.
+SerenAI connects AI agents to data publishers. Query databases, APIs, and services from verified publishers using prepaid credits or on-chain payments. No subscriptions—pay only for what you use.
 
-## Quick Links
+## Quick Start for AI Agents
 
-- [API Documentation](https://docs.serendb.com/)
-- [MCP Server](https://docs.serendb.com/mcp/)
-- [Getting Started](https://docs.serendb.com/guides/quickstart)
+**To query a data publisher:**
 
-## Core Concepts
+1. **Discover** - Find relevant data sources
+   \`GET /agent/publishers/suggest?query=weather data for San Francisco\`
 
-- **Projects**: Isolated database environments with branching support
-- **Branches**: Git-like database branching for dev/prod isolation
-- **Endpoints**: Compute instances that serve database connections
-- **Publishers**: Data providers in the agent marketplace
-- **SerenBucks**: Prepaid credits for pay-per-query access (1 SB = $1 USD)
+2. **Estimate cost** - Check price before executing
+   \`POST /agent/estimate\` with your query
+
+3. **Execute** - Run the paid query
+   \`POST /agent/database\` for SQL queries
+   \`POST /agent/api\` for HTTP API calls
+
+4. **Check balance** - Monitor your credits
+   \`GET /agent/wallet/balance\`
 
 ## Authentication
-
-All API requests require authentication via API key:
 
 \`\`\`
 Authorization: Bearer seren_live_xxxxx
 \`\`\`
 
-## Base URL
+Base URL: \`https://api.serendb.com\`
 
+---
+
+## Agent Marketplace (Primary API)
+
+Use these endpoints to discover and query data publishers.
+
+### Discover Publishers
+
+| Endpoint | Use When |
+|----------|----------|
+| \`GET /agent/publishers\` | Browse all active publishers |
+| \`GET /agent/publishers/suggest?query=<task>\` | AI-powered suggestions for your task |
+| \`GET /agent/publishers/{slug}\` | Get details about a specific publisher |
+
+**Example - Find publishers for a task:**
 \`\`\`
-https://api.serendb.com
+GET /agent/publishers/suggest?query=scrape website content&limit=5
 \`\`\`
 
-## Key Endpoints
+**Example - Search publishers:**
+\`\`\`
+GET /agent/publishers?search=financial&is_verified=true&limit=20
+\`\`\`
 
-### Projects
-- \`POST /projects\` - Create a new project
-- \`GET /projects\` - List all projects
-- \`GET /projects/{project_id}\` - Get project details
-- \`DELETE /projects/{project_id}\` - Delete a project
+### Query Publishers
 
-### Branches
-- \`POST /projects/{project_id}/branches\` - Create branch
-- \`GET /projects/{project_id}/branches\` - List branches
-- \`GET /projects/{project_id}/branches/{branch_id}\` - Get branch details
+| Endpoint | Use When |
+|----------|----------|
+| \`POST /agent/database\` | Query a publisher's database (SQL) |
+| \`POST /agent/api\` | Call a publisher's HTTP API |
+| \`POST /agent/stream\` | Stream large responses |
+| \`POST /agent/estimate\` | Check cost before executing |
 
-### SQL Execution
-- \`POST /projects/{project_id}/branches/{branch_id}/sql\` - Execute SQL query
-- \`POST /projects/{project_id}/branches/{branch_id}/sql/transaction\` - Execute SQL transaction
-
-### Agent Marketplace
-- \`GET /agent/publishers\` - List available data publishers
-- \`POST /agent/publishers\` - Create a new publisher (API key auth)
-- \`GET /agent/publishers/{slug}\` - Get publisher details
-- \`POST /agent/query\` - Execute paid query against publisher
-- \`GET /agent/balance\` - Check SerenBucks balance
-- \`POST /agent/deposit\` - Deposit SerenBucks via Stripe checkout
-
-### Endpoints (Compute)
-- \`POST /projects/{project_id}/branches/{branch_id}/endpoints\` - Create endpoint
-- \`GET /projects/{project_id}/branches/{branch_id}/endpoints\` - List endpoints
-- \`POST /projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}/start\` - Start endpoint
-- \`POST /projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}/suspend\` - Suspend endpoint
-
-## Response Format
-
-All responses are JSON. Successful responses include the requested data. Errors follow this format:
-
+**Example - Database query:**
 \`\`\`json
+POST /agent/database
 {
-  "error": {
-    "code": "error_code",
-    "message": "Human readable message"
-  }
+  "publisher_slug": "financial-news",
+  "query": "SELECT headline, summary FROM articles WHERE topic = 'AI' ORDER BY published_at DESC LIMIT 10"
 }
 \`\`\`
 
-## Rate Limits
+**Example - API call:**
+\`\`\`json
+POST /agent/api
+{
+  "publisher_slug": "web-scraper",
+  "method": "POST",
+  "path": "/extract",
+  "body": { "url": "https://example.com", "selectors": ["h1", "p"] }
+}
+\`\`\`
 
-- Standard: 100 requests/minute
-- SQL execution: 60 queries/minute
-- Agent marketplace: Pay-per-query (no artificial limits)
+**Example - Estimate cost first:**
+\`\`\`json
+POST /agent/estimate
+{
+  "publisher_slug": "financial-news",
+  "query": "SELECT * FROM articles LIMIT 100"
+}
+// Response: { "estimated_cost": { "amount": "0.05", "asset": "USDC" } }
+\`\`\`
+
+### Wallet & Payments
+
+| Endpoint | Use When |
+|----------|----------|
+| \`GET /agent/wallet/balance\` | Check prepaid balance |
+| \`POST /agent/wallet/deposit\` | Add funds via Stripe |
+| \`POST /agent/deposit\` | Add funds via on-chain payment |
+| \`GET /agent/wallet/transactions\` | View transaction history |
+
+**Payment Methods:**
+- **Prepaid balance**: Include \`Authorization: Bearer <token>\` header
+- **On-chain (x402)**: If no auth header, returns 402 with payment instructions
+
+### Publisher Response Format
+
+Successful queries return:
+\`\`\`json
+{
+  "data": { ... },
+  "cost": { "amount": "0.01", "asset": "USDC" },
+  "publisher": { "slug": "...", "name": "..." }
+}
+\`\`\`
+
+---
+
+## Projects & SQL Execution
+
+For users hosting their own databases on SerenAI.
+
+### Projects
+
+| Endpoint | Description |
+|----------|-------------|
+| \`POST /projects\` | Create a new project |
+| \`GET /projects\` | List your projects |
+| \`GET /projects/{project_id}\` | Get project details |
+| \`DELETE /projects/{project_id}\` | Delete a project |
+
+**Example - Create project:**
+\`\`\`json
+POST /projects
+{
+  "name": "my-analytics-db",
+  "region": "us-east-1"
+}
+\`\`\`
+
+### SQL Execution
+
+| Endpoint | Description |
+|----------|-------------|
+| \`POST /projects/{project_id}/branches/{branch_id}/sql\` | Execute SQL query |
+| \`POST /projects/{project_id}/branches/{branch_id}/sql/transaction\` | Execute transaction |
+| \`GET /projects/{project_id}/branches/{branch_id}/connection-string\` | Get connection string |
+
+**Example - Execute SQL:**
+\`\`\`json
+POST /projects/{project_id}/branches/{branch_id}/sql
+{
+  "query": "SELECT * FROM users WHERE active = true",
+  "params": []
+}
+\`\`\`
+
+---
+
+## Common Errors
+
+| Code | Meaning | Solution |
+|------|---------|----------|
+| 402 | Payment Required | Add funds or include payment header |
+| 404 | Publisher not found | Verify slug with \`GET /agent/publishers\` |
+| 429 | Rate limited | Wait and retry (100 req/min standard) |
+| 401 | Unauthorized | Check API key format: \`Bearer seren_live_xxx\` |
+
+---
+
+## Integration Options
+
+**MCP Server** (recommended for Claude, Cursor, GPT):
+\`\`\`bash
+npx @anthropic/seren-mcp
+\`\`\`
+63 tools with type-safe parameters. See [MCP Documentation](/mcp/).
+
+**REST API** (for custom agents):
+Use the endpoints documented above with any HTTP client.
+
+---
 
 ## Optional
 
-- [Full API Reference](/llms-full.txt)
-- [MCP Tool Schemas](/mcp/tools.json)
-- [OpenAPI Specification](https://api.serendb.com/openapi.json)
+- [Full API Reference](/llms-full.txt) - Complete endpoint documentation
+- [MCP Tool Schemas](/mcp/tools.json) - Machine-readable tool definitions
+- [OpenAPI Specification](https://api.serendb.com/openapi.json) - Full OpenAPI spec
 `;
 }
 
 function generateFullLlmsTxt(spec) {
   const paths = spec.paths || {};
-  const schemas = spec.components?.schemas || {};
 
   let content = `# SerenAI - Full API Reference
 
-> Pay Per Call Agentic Commerce for public and private data
+> Pay-per-query data marketplace for AI agents. Complete endpoint documentation.
 
-This is the complete API reference for SerenAI. For a condensed overview, see [/llms.txt](/llms.txt).
+For a condensed overview, see [/llms.txt](/llms.txt).
 
-## Base URL
-
-\`\`\`
-https://api.serendb.com
-\`\`\`
-
-## Authentication
-
-All requests require an API key in the Authorization header:
+## Base URL & Authentication
 
 \`\`\`
+Base URL: https://api.serendb.com
 Authorization: Bearer seren_live_xxxxx
 \`\`\`
 
 ---
-
-## Endpoints
 
 `;
 
@@ -165,12 +256,89 @@ Authorization: Bearer seren_live_xxxxx
     }
   }
 
-  // Output by tag
-  for (const [tag, operations] of Object.entries(taggedPaths).sort()) {
-    content += `### ${tag}\n\n`;
+  // Define priority order - agent-related first, then projects/SQL, then others
+  const priorityTags = [
+    'agent',           // Core marketplace
+    'agent-wallet',    // Payments
+    'templates',       // Agent templates
+    'Projects',        // Database projects
+    'Databases',       // SQL databases
+    'Roles',           // Database roles
+  ];
+
+  // Tags to minimize (just list endpoints, less detail)
+  const minimizedTags = [
+    'Branches',
+    'Endpoints',
+    'Branch Protection',
+    'Logical Replication',
+    'Operations',
+    'VPC',
+    'IP Allow Lists'
+  ];
+
+  // Sort tags: priority first, then alphabetical, minimized last
+  const sortedTags = Object.keys(taggedPaths).sort((a, b) => {
+    const aIndex = priorityTags.indexOf(a);
+    const bIndex = priorityTags.indexOf(b);
+    const aMinimized = minimizedTags.includes(a);
+    const bMinimized = minimizedTags.includes(b);
+
+    // Minimized tags go last
+    if (aMinimized && !bMinimized) return 1;
+    if (!aMinimized && bMinimized) return -1;
+
+    // Priority tags go first
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+    if (aIndex !== -1) return -1;
+    if (bIndex !== -1) return 1;
+
+    return a.localeCompare(b);
+  });
+
+  // Output by tag with priority ordering
+  for (const tag of sortedTags) {
+    const operations = taggedPaths[tag];
+    const isMinimized = minimizedTags.includes(tag);
+    const isPriority = priorityTags.slice(0, 3).includes(tag); // agent, agent-wallet, templates
+
+    // Section header with context
+    if (tag === 'agent') {
+      content += `## Agent Marketplace (Primary API)
+
+Query data publishers with pay-per-query pricing. This is the main API for AI agents.
+
+`;
+    } else if (tag === 'agent-wallet') {
+      content += `## Agent Wallet & Payments
+
+Manage prepaid balance and payment methods.
+
+`;
+    } else if (tag === 'templates') {
+      content += `## Agent Templates
+
+Discover and invoke pre-built agent templates.
+
+`;
+    } else if (isMinimized) {
+      content += `## ${tag} (Infrastructure)
+
+`;
+    } else {
+      content += `## ${tag}
+
+`;
+    }
 
     for (const op of operations) {
-      content += `#### \`${op.method} ${op.path}\`\n\n`;
+      // For minimized sections, just list endpoints briefly
+      if (isMinimized) {
+        content += `- \`${op.method} ${op.path}\` - ${op.summary || op.description || ''}\n`;
+        continue;
+      }
+
+      content += `### \`${op.method} ${op.path}\`\n\n`;
 
       if (op.summary) {
         content += `${op.summary}\n\n`;
@@ -182,78 +350,62 @@ Authorization: Bearer seren_live_xxxxx
 
       // Parameters
       if (op.parameters.length > 0) {
-        content += `**Parameters:**\n\n`;
+        content += `**Parameters:**\n`;
         for (const param of op.parameters) {
-          const required = param.required ? ' (required)' : '';
+          const required = param.required ? ' *(required)*' : '';
           const type = param.schema?.type || 'string';
-          content += `- \`${param.name}\` (${param.in}, ${type}${required}): ${param.description || ''}\n`;
+          content += `- \`${param.name}\` (${type}${required}): ${param.description || ''}\n`;
         }
         content += '\n';
       }
 
-      // Request body
+      // Request body - try to extract schema properties for examples
       if (op.requestBody) {
         const jsonContent = op.requestBody.content?.['application/json'];
         if (jsonContent?.schema) {
-          content += `**Request Body:** See schema in OpenAPI spec\n\n`;
+          const schema = jsonContent.schema;
+          const required = schema.required || [];
+          const properties = schema.properties || {};
+
+          if (Object.keys(properties).length > 0) {
+            content += `**Request Body:**\n`;
+            for (const [propName, propSchema] of Object.entries(properties)) {
+              const isRequired = required.includes(propName) ? ' *(required)*' : '';
+              const propType = propSchema.type || 'any';
+              const desc = propSchema.description || '';
+              content += `- \`${propName}\` (${propType}${isRequired}): ${desc}\n`;
+            }
+            content += '\n';
+
+            // Add example for priority endpoints
+            if (isPriority) {
+              const example = generateExampleBody(op.path, op.method, properties, required);
+              if (example) {
+                content += `**Example:**\n\`\`\`json\n${example}\n\`\`\`\n\n`;
+              }
+            }
+          } else {
+            content += `**Request Body:** See OpenAPI spec for schema\n\n`;
+          }
         }
       }
 
       // Responses
       const successCodes = Object.keys(op.responses).filter(c => c.startsWith('2'));
       if (successCodes.length > 0) {
-        content += `**Success Response:** ${successCodes.join(', ')}\n\n`;
+        content += `**Response:** ${successCodes.join(', ')}\n\n`;
       }
 
       content += '---\n\n';
     }
+
+    if (isMinimized) {
+      content += '\n---\n\n';
+    }
   }
 
-  // Add key schemas
+  // Add key schemas focused on marketplace
   content += `## Key Schemas
-
-### Project
-
-A project is an isolated database environment.
-
-\`\`\`json
-{
-  "id": "uuid",
-  "name": "string",
-  "region": "string",
-  "created_at": "timestamp",
-  "default_branch_id": "uuid"
-}
-\`\`\`
-
-### Branch
-
-A branch represents a point-in-time copy of your database.
-
-\`\`\`json
-{
-  "id": "uuid",
-  "project_id": "uuid",
-  "name": "string",
-  "parent_branch_id": "uuid | null",
-  "created_at": "timestamp"
-}
-\`\`\`
-
-### Endpoint
-
-An endpoint is a compute instance serving database connections.
-
-\`\`\`json
-{
-  "id": "uuid",
-  "branch_id": "uuid",
-  "status": "running | suspended | starting",
-  "host": "string",
-  "autoscaling_min": "integer",
-  "autoscaling_max": "integer"
-}
-\`\`\`
 
 ### Publisher
 
@@ -262,20 +414,152 @@ A data publisher in the agent marketplace.
 \`\`\`json
 {
   "id": "uuid",
-  "slug": "string",
+  "slug": "string (unique identifier for API calls)",
   "name": "string",
   "description": "string",
-  "price_per_query": "decimal",
-  "categories": ["string"]
+  "is_verified": "boolean",
+  "pricing": {
+    "asset": "USDC",
+    "price_per_query": "decimal"
+  },
+  "categories": ["string"],
+  "capabilities": ["database", "api", "streaming"]
+}
+\`\`\`
+
+### Query Response
+
+Response from \`/agent/database\` or \`/agent/api\`.
+
+\`\`\`json
+{
+  "data": { "rows": [...], "columns": [...] },
+  "cost": {
+    "amount": "0.01",
+    "asset": "USDC"
+  },
+  "publisher": {
+    "slug": "publisher-slug",
+    "name": "Publisher Name"
+  }
+}
+\`\`\`
+
+### Wallet Balance
+
+Response from \`/agent/wallet/balance\`.
+
+\`\`\`json
+{
+  "funded_balance": "10.50",
+  "promotional_balance": "5.00",
+  "total_balance": "15.50",
+  "asset": "USDC"
+}
+\`\`\`
+
+### Project
+
+A database project for self-hosted data.
+
+\`\`\`json
+{
+  "id": "uuid",
+  "name": "string",
+  "region": "us-east-1 | eu-west-1 | ...",
+  "created_at": "timestamp",
+  "default_branch_id": "uuid"
 }
 \`\`\`
 
 ---
 
-For the complete OpenAPI specification, see: https://api.serendb.com/openapi.json
+For the complete OpenAPI specification: https://api.serendb.com/openapi.json
 `;
 
   return content;
+}
+
+// Generate example request body for priority endpoints
+function generateExampleBody(path, method, properties, required) {
+  const examples = {
+    '/agent/database': {
+      publisher_slug: 'financial-news',
+      query: 'SELECT headline, published_at FROM articles LIMIT 10'
+    },
+    '/agent/api': {
+      publisher_slug: 'web-scraper',
+      method: 'POST',
+      path: '/extract',
+      body: { url: 'https://example.com' }
+    },
+    '/agent/estimate': {
+      publisher_slug: 'financial-news',
+      query: 'SELECT * FROM articles WHERE category = $1',
+      params: ['technology']
+    },
+    '/agent/deposit': {
+      amount: '10.00'
+    },
+    '/agent/wallet/deposit': {
+      amount_cents: 1000
+    },
+    '/agent/templates/publish': {
+      name: 'my-agent-template',
+      description: 'A useful agent template',
+      language: 'python',
+      source_code: '# template code here'
+    }
+  };
+
+  // Check for path pattern matches
+  if (path.includes('/agent/templates/') && path.includes('/invoke')) {
+    return JSON.stringify({ input: { query: 'example input' } }, null, 2);
+  }
+
+  if (examples[path]) {
+    return JSON.stringify(examples[path], null, 2);
+  }
+
+  // Generate generic example from properties
+  if (Object.keys(properties).length <= 5) {
+    const example = {};
+    for (const [propName, propSchema] of Object.entries(properties)) {
+      if (required.includes(propName) || Object.keys(properties).length <= 3) {
+        example[propName] = getExampleValue(propName, propSchema);
+      }
+    }
+    if (Object.keys(example).length > 0) {
+      return JSON.stringify(example, null, 2);
+    }
+  }
+
+  return null;
+}
+
+// Generate example value for a property
+function getExampleValue(name, schema) {
+  const type = schema.type || 'string';
+
+  // Name-based examples
+  if (name.includes('slug')) return 'example-slug';
+  if (name.includes('query')) return 'SELECT * FROM table LIMIT 10';
+  if (name.includes('email')) return 'user@example.com';
+  if (name.includes('url')) return 'https://example.com';
+  if (name.includes('name')) return 'example-name';
+  if (name.includes('description')) return 'A description';
+  if (name.includes('amount')) return '10.00';
+  if (name.includes('limit')) return 10;
+  if (name.includes('offset')) return 0;
+
+  // Type-based examples
+  if (type === 'string') return 'string';
+  if (type === 'integer' || type === 'number') return 1;
+  if (type === 'boolean') return true;
+  if (type === 'array') return [];
+  if (type === 'object') return {};
+
+  return 'value';
 }
 
 function main() {
