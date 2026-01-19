@@ -23,13 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout serencore (private repo)
-        uses: actions/checkout@v4
-        with:
-          repository: serenorg/serencore
-          token: ${{ secrets.SERENCORE_PAT }}
-          path: serencore
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -39,16 +32,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Copy OpenAPI spec from serencore
-        run: |
-          cp serencore/seren-core/openapi.json openapi.json
-          echo "OpenAPI spec size: $(wc -c < openapi.json) bytes"
-
       - name: Create dist directory
         run: mkdir -p dist/mcp dist/guides
 
       - name: Generate Scalar API docs
         run: npm run build:api
+        env:
+          GH_PAT: ${{ secrets.SERENCORE_PAT }}
 
       - name: Generate llms.txt files
         run: npm run build:llms
