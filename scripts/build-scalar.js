@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const OPENAPI_URL = 'https://api.serendb.com/openapi.json';
+const OPENAPI_URL = 'https://raw.githubusercontent.com/serenorg/serencore/main/seren-core/openapi.json';
 const OPENAPI_PATH = path.join(__dirname, '..', 'openapi.json');
 const DIST_PATH = path.join(__dirname, '..', 'dist');
 const OUTPUT_PATH = path.join(DIST_PATH, 'index.html');
@@ -19,9 +19,9 @@ async function fetchOpenApiSpec() {
 
   console.log(`Fetching OpenAPI spec from ${OPENAPI_URL}...`);
   const headers = {};
-  if (process.env.SEREN_API_KEY) {
-    headers['Authorization'] = `Bearer ${process.env.SEREN_API_KEY}`;
-    console.log('Using SEREN_API_KEY for authentication');
+  if (process.env.GITHUB_TOKEN) {
+    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    console.log('Using GITHUB_TOKEN for authentication');
   }
   const response = await fetch(OPENAPI_URL, { headers });
   if (!response.ok) {
