@@ -40,7 +40,7 @@ If you prefer manual configuration, jump to your platform:
 Run this command:
 
 ```bash
-claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user
+claude mcp add --transport http -s user seren https://mcp.serendb.com/mcp
 ```
 
 Done. Seren tools are now available.
