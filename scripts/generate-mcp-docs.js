@@ -505,24 +505,37 @@ const MCP_TOOLS = [
   // ============ Publishers (Admin) ============
   {
     name: 'create_publisher',
-    description: 'Create a new publisher in the agent store',
+    description: 'Create a new publisher in the agent store. Publishers can be databases, API integrations, or compute resources.',
     category: 'Publishers',
     parameters: {
       name: { type: 'string', required: true, description: 'Publisher display name' },
       slug: { type: 'string', required: true, description: 'URL-friendly slug' },
       wallet_address: { type: 'string', required: true, description: 'Wallet address for payments' },
-      wallet_network_id: { type: 'string', required: true, description: 'Network ID (CAIP-2 format)' }
+      wallet_network_id: { type: 'string', required: true, description: 'Network ID (CAIP-2 format)' },
+      publisher_category: { type: 'string', required: true, description: 'Category: database, integration, or compute' },
+      database_type: { type: 'string', required: false, description: 'For database category: serendb, neon, or supabase' },
+      integration_type: { type: 'string', required: false, description: 'For integration category: api or mcp' },
+      compute_type: { type: 'string', required: false, description: 'For compute category: template, workflow, or function' },
+      api_url: { type: 'string', required: false, description: 'External API URL (for integration_type: api)' },
+      mcp_endpoint: { type: 'string', required: false, description: 'MCP server endpoint URL (for integration_type: mcp)' },
+      description: { type: 'string', required: false, description: 'Publisher description' },
+      email: { type: 'string', required: false, description: 'Contact email' }
     }
   },
   {
     name: 'update_publisher',
-    description: 'Update an existing publisher\'s details',
+    description: 'Update an existing publisher\'s details including taxonomy, endpoints, and MCP configuration.',
     category: 'Publishers',
     parameters: {
-      slug: { type: 'string', required: true },
-      name: { type: 'string', required: false },
-      description: { type: 'string', required: false },
-      is_active: { type: 'boolean', required: false }
+      slug: { type: 'string', required: true, description: 'Publisher slug to update' },
+      name: { type: 'string', required: false, description: 'Publisher display name' },
+      description: { type: 'string', required: false, description: 'Publisher description' },
+      resource_name: { type: 'string', required: false, description: 'Resource display name for marketplace' },
+      resource_description: { type: 'string', required: false, description: 'Resource description for marketplace' },
+      api_url: { type: 'string', required: false, description: 'External API URL (for API publishers)' },
+      mcp_endpoint: { type: 'string', required: false, description: 'MCP server endpoint URL (for MCP publishers)' },
+      email: { type: 'string', required: false, description: 'Contact email' },
+      is_active: { type: 'boolean', required: false, description: 'Whether the publisher is active' }
     }
   },
   {
@@ -545,6 +558,43 @@ const MCP_TOOLS = [
       slug: { type: 'string', required: true },
       logo: { type: 'string', required: true, description: 'Base64 encoded image' },
       content_type: { type: 'string', required: true, description: 'image/png, image/jpeg, etc.' }
+    }
+  },
+
+  // ============ MCP Publishers ============
+  {
+    name: 'list_mcp_tools',
+    description: 'List tools available on an MCP publisher. Use this to discover what capabilities an MCP publisher provides.',
+    category: 'MCP Publishers',
+    parameters: {
+      publisher: { type: 'string', required: true, description: 'Publisher slug of the MCP publisher' }
+    }
+  },
+  {
+    name: 'call_mcp_tool',
+    description: 'Call a tool on an MCP publisher. Use list_mcp_tools first to see available tools and their input schemas.',
+    category: 'MCP Publishers',
+    parameters: {
+      publisher: { type: 'string', required: true, description: 'Publisher slug of the MCP publisher' },
+      tool_name: { type: 'string', required: true, description: 'Name of the tool to call' },
+      arguments: { type: 'object', required: false, description: 'Arguments to pass to the tool (JSON object)' }
+    }
+  },
+  {
+    name: 'list_mcp_resources',
+    description: 'List resources available on an MCP publisher. MCP publishers can expose resources (like files, data sources) that can be read.',
+    category: 'MCP Publishers',
+    parameters: {
+      publisher: { type: 'string', required: true, description: 'Publisher slug of the MCP publisher' }
+    }
+  },
+  {
+    name: 'read_mcp_resource',
+    description: 'Read a resource from an MCP publisher. Use list_mcp_resources first to see available resources and their URIs.',
+    category: 'MCP Publishers',
+    parameters: {
+      publisher: { type: 'string', required: true, description: 'Publisher slug of the MCP publisher' },
+      uri: { type: 'string', required: true, description: 'URI of the resource to read' }
     }
   },
 
@@ -788,6 +838,7 @@ function generateToolsJson() {
 const CATEGORY_ORDER = [
   'Marketplace',
   'Publishers',
+  'MCP Publishers',
   'Templates',
   'Payments',
   'Wallet',
