@@ -256,6 +256,125 @@ After installation, you'll have access to:
 
 ---
 
+## Local Installation (Advanced)
+
+For developers who need full control, offline access, or are contributing to Seren, you can run the MCP server locally.
+
+### Install via Cargo (Rust)
+
+```bash
+# Install from crates.io
+cargo install seren-mcp
+
+# Or build from source
+git clone https://github.com/serenorg/seren.git
+cd seren
+cargo install --path mcp
+```
+
+### Install via Docker
+
+```bash
+# Run the MCP server (HTTP mode)
+docker run -p 8080:8080 ghcr.io/serenorg/seren-mcp:latest
+
+# With environment configuration
+docker run -p 8080:8080 \
+  -e API_KEY="seren_..." \
+  ghcr.io/serenorg/seren-mcp:latest
+```
+
+### Install via GitHub Releases
+
+Download pre-built binaries from [GitHub Releases](https://github.com/serenorg/seren/releases):
+
+| Platform            | Binary                          |
+| ------------------- | ------------------------------- |
+| macOS Apple Silicon | `seren-mcp-darwin-arm64`        |
+| macOS Intel         | `seren-mcp-darwin-x86_64`       |
+| Linux x86_64        | `seren-mcp-linux-x86_64`        |
+| Linux ARM64         | `seren-mcp-linux-arm64`         |
+| Windows x86_64      | `seren-mcp-windows-x86_64.exe`  |
+
+```bash
+# Download and install (macOS/Linux)
+curl -L https://github.com/serenorg/seren/releases/latest/download/seren-mcp-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m) -o seren-mcp
+chmod +x seren-mcp
+sudo mv seren-mcp /usr/local/bin/
+```
+
+### Configure Local Server
+
+**Claude Code:**
+
+```bash
+# Add local server with API key
+claude mcp add seren-local seren-mcp start --env API_KEY=seren_...
+```
+
+**Manual JSON config:**
+
+```json
+{
+  "mcpServers": {
+    "seren-local": {
+      "command": "seren-mcp",
+      "args": ["start"],
+      "env": {
+        "API_KEY": "seren_..."
+      }
+    }
+  }
+}
+```
+
+### X402 Local Signing (Crypto Payments)
+
+For paying with cryptocurrency instead of SerenBucks:
+
+1. Set your wallet private key:
+
+```bash
+export WALLET_PRIVATE_KEY="0x..."
+```
+
+1. Configure spending thresholds in `~/.config/seren-mcp/signer.toml`:
+
+```toml
+# Auto-approve payments under this amount (USD)
+auto_approve_limit = 0.10
+```
+
+**Security:** Your private key never leaves your device—all signing happens locally.
+
+### Environment Variables
+
+| Variable              | Description                      | Default                   |
+| --------------------- | -------------------------------- | ------------------------- |
+| `API_URL`             | Seren API base URL               | `https://api.serendb.com` |
+| `API_KEY`             | Your Seren API key               | Required                  |
+| `WALLET_PRIVATE_KEY`  | Ethereum key for x402 payments   | Optional                  |
+| `HOST`                | Listen host                      | `0.0.0.0`                 |
+| `PORT`                | Listen port                      | `3000`                    |
+
+### Commands
+
+```bash
+# Start in stdio mode (Claude Desktop / local)
+seren-mcp start
+
+# Start in HTTP mode with bearer auth
+seren-mcp start:http
+
+# Start in HTTP mode with OAuth 2.1 (hosted)
+seren-mcp start:oauth
+
+# Show help
+seren-mcp --help
+```
+
+---
+
 ## What's Next?
 
 - [Full API Documentation](/) — REST API reference
