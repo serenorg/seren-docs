@@ -383,5 +383,5 @@ seren-mcp --help
 
 ## Support
 
-- GitHub Issues: [github.com/serenorg/seren-installer/issues](https://github.com/serenorg/seren-installer/issues)
+- GitHub Issues: [github.com/serenorg/seren/issues](https://github.com/serenorg/seren/issues)
 - Documentation: [docs.serendb.com](https://docs.serendb.com)
