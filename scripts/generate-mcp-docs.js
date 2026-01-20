@@ -1030,8 +1030,7 @@ function generateInstallHtml() {
   </div>
 
   <div class="content">
-  <h1>Give Your AI Assistant Superpowers</h1>
-  <p>Get Seren running in your AI assistant in under 90 seconds.</p>
+  <h1>Give Your AI Assistant Superpowers in Under 90 Seconds</h1>
 
   <h2>Choose Your Path</h2>
 
