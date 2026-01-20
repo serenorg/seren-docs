@@ -1030,8 +1030,42 @@ function generateInstallHtml() {
   </div>
 
   <div class="content">
-  <h1>Install Seren MCP Server</h1>
+  <h1>Give Your AI Assistant Superpowers</h1>
   <p>Get Seren running in your AI assistant in under 90 seconds.</p>
+
+  <h2>Choose Your Path</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+    <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
+      <h3 style="margin-top: 0; color: var(--primary);">Option A: Cursor IDE</h3>
+      <p>Cursor is a free AI-powered code editor with native MCP support.</p>
+      <ul style="margin: 1rem 0;">
+        <li>Full-featured IDE based on VS Code</li>
+        <li>Native MCP support - works out of the box</li>
+        <li>No Node.js or other dependencies needed</li>
+        <li>AI-assisted coding with Claude, GPT-4, and more</li>
+        <li>Free tier available</li>
+      </ul>
+      <p><strong>Setup:</strong> Download Cursor, then run the installer below.</p>
+      <a href="https://www.cursor.com/downloads" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Download Cursor</a>
+    </div>
+
+    <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
+      <h3 style="margin-top: 0; color: var(--primary);">Option B: Chat Interface</h3>
+      <p>No download. No installation. Just open your browser.</p>
+      <ul style="margin: 1rem 0;">
+        <li>Works instantly in any browser</li>
+        <li>No software to install or configure</li>
+        <li>Full Seren capabilities</li>
+        <li>Works on any device (desktop, tablet, mobile)</li>
+      </ul>
+      <p><strong>Setup:</strong> Just click the button and sign in.</p>
+      <a href="https://chat.serendb.com" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Open Chat Interface</a>
+    </div>
+  </div>
+
+  <h2>Install Seren MCP</h2>
+  <p>Already have an AI tool installed? Run the installer to configure it:</p>
 
   <div class="install-box">
     <h3>macOS / Linux</h3>
