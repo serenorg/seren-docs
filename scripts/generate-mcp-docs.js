@@ -1059,7 +1059,7 @@ function generateInstallHtml() {
         <li>Works on any device (desktop, tablet, mobile)</li>
       </ul>
       <p><strong>Setup:</strong> Just click the button and sign in.</p>
-      <a href="https://chat.serendb.com" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Open Chat Interface</a>
+      <a href="https://serendb.com/chat" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Open Chat Interface</a>
     </div>
   </div>
 
