@@ -208,6 +208,8 @@ Use the endpoints documented above with any HTTP client.
 ## Optional
 
 - [Full API Reference](/llms-full.txt) - Complete endpoint documentation
+- [Create Publisher Guide](/guides/create-publisher.html) - Complete schema and curl examples
+- [MCP Publishers Guide](/guides/mcp-publishers.html) - MCP server integration
 - [MCP Tool Schemas](/mcp/tools.json) - Machine-readable tool definitions
 - [OpenAPI Specification](https://api.serendb.com/openapi.json) - Full OpenAPI spec
 `;
@@ -411,6 +413,70 @@ Discover and invoke pre-built agent templates.
   // Add key schemas focused on marketplace
   content += `## Key Schemas
 
+### CreatePublisherRequest
+
+Complete schema for creating a publisher. All fields except required ones are optional.
+
+**Required fields:** \`name\`, \`slug\`, \`wallet_address\`, \`wallet_network_id\`
+
+\`\`\`json
+{
+  "name": "string (required) - Display name",
+  "slug": "string (required) - URL-friendly unique identifier",
+  "wallet_address": "string (required) - 0x... Ethereum address for payments",
+  "wallet_network_id": "string (required) - CAIP-2 format, e.g., 'eip155:8453' for Base",
+
+  "description": "string - Publisher description",
+  "logo_url": "string - URL to publisher logo",
+  "categories": ["string"] - e.g., ["blockchain", "finance"],
+  "capabilities": ["string"] - e.g., ["sql_query", "web_scraping"],
+  "use_cases": ["string"] - Human-readable use case descriptions,
+
+  "source_type": "string - 'serendb' | 'neon' | 'supabase' | 'api'",
+  "billing_model": "string - 'x402_per_request' | 'prepaid_credits' | 'x402_passthrough'",
+
+  "api_url": "string - External API URL (required for api source_type)",
+  "api_key_header": "string - Header name for API key injection (e.g., 'Authorization')",
+  "api_key_query_param": "string - Query param for API key injection",
+  "upstream_api_key": "string - API key for upstream service (encrypted)",
+
+  "project_id": "uuid - SerenDB project ID (for serendb source_type)",
+  "branch_id": "uuid - SerenDB branch ID (for serendb source_type)",
+  "database_name": "string - Database name (default: 'serendb')",
+
+  "base_price_per_1000_rows": "decimal string - e.g., '0.001'",
+  "price_per_call": "decimal string - e.g., '0.01'",
+  "price_per_get": "decimal string",
+  "price_per_post": "decimal string",
+  "price_per_put": "decimal string",
+  "price_per_patch": "decimal string",
+  "price_per_delete": "decimal string",
+
+  "resource_name": "string - Display name for the resource",
+  "resource_description": "string - Description of what the resource provides"
+}
+\`\`\`
+
+**Example - Create an API publisher:**
+\`\`\`bash
+curl -X POST "https://api.serendb.com/agent/publishers" \\
+  -H "Authorization: Bearer $SEREN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "My Weather API",
+    "slug": "my-weather-api",
+    "description": "Real-time weather data",
+    "wallet_address": "0x83334ef0C6f6396413C508A7762741e9FD8B20E9",
+    "wallet_network_id": "eip155:8453",
+    "source_type": "api",
+    "api_url": "https://api.weather-service.com",
+    "api_key_header": "X-API-Key",
+    "upstream_api_key": "your-api-key",
+    "billing_model": "x402_per_request",
+    "price_per_call": "0.001"
+  }'
+\`\`\`
+
 ### Publisher
 
 A data publisher in the agent marketplace.
@@ -460,6 +526,39 @@ Response from \`/agent/wallet/balance\`.
   "total_balance": "15.50",
   "asset": "USDC"
 }
+\`\`\`
+
+### UpdatePublisherPricingRequest
+
+Configure pricing for a publisher.
+
+\`\`\`json
+{
+  "price_per_call": "decimal string - Default price per API call",
+  "price_per_get": "decimal string - Price for GET requests",
+  "price_per_post": "decimal string - Price for POST requests",
+  "price_per_put": "decimal string - Price for PUT requests",
+  "price_per_patch": "decimal string - Price for PATCH requests",
+  "price_per_delete": "decimal string - Price for DELETE requests",
+  "base_price_per_1000_rows": "decimal string - Price per 1000 rows (database)",
+  "min_charge": "decimal string - Minimum charge per request",
+  "max_charge": "decimal string - Maximum charge per request",
+  "prepaid_enabled": "boolean - Accept SerenBucks payments",
+  "onchain_enabled": "boolean - Accept on-chain x402 payments"
+}
+\`\`\`
+
+**Example - Configure pricing:**
+\`\`\`bash
+curl -X PUT "https://api.serendb.com/agent/publishers/my-api/pricing" \\
+  -H "Authorization: Bearer $SEREN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "price_per_call": "0.01",
+    "min_charge": "0.001",
+    "prepaid_enabled": true,
+    "onchain_enabled": true
+  }'
 \`\`\`
 
 ### Project
