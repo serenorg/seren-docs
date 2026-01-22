@@ -211,6 +211,80 @@ TOML
     return 0
 }
 
+# Configure OpenCode (uses type: "remote" instead of transport)
+configure_opencode() {
+    local config_path="$HOME/.config/opencode/opencode.json"
+    local config_dir=$(dirname "$config_path")
+
+    # Check if config directory exists (indicates client is installed)
+    if [[ ! -d "$config_dir" ]]; then
+        return 1  # Client not installed
+    fi
+
+    echo "Configuring OpenCode..."
+
+    # Create backup if config exists
+    if [[ -f "$config_path" ]]; then
+        local backup_path="${config_path}.backup.$(date +%s)"
+        cp "$config_path" "$backup_path"
+        echo "  Backed up to: $backup_path"
+    fi
+
+    # Configure using Python for safe JSON handling
+    python3 << PYTHON_SCRIPT
+import json
+import os
+import sys
+
+config_path = "$config_path"
+
+try:
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+except FileNotFoundError:
+    config = {}
+except json.JSONDecodeError:
+    print("  Warning: Invalid JSON, creating new config")
+    config = {}
+
+# Add schema if not present
+if '\$schema' not in config:
+    config['\$schema'] = "https://opencode.ai/config.json"
+
+if 'mcp' not in config:
+    config['mcp'] = {}
+
+if 'seren' in config['mcp']:
+    print("  Already configured, skipping")
+    sys.exit(2)  # Already configured
+
+# OpenCode uses type: "remote" NOT transport: "streamable-http"
+config['mcp']['seren'] = {
+    "type": "remote",
+    "url": "https://mcp.serendb.com/mcp",
+    "enabled": True
+}
+
+# Ensure directory exists
+os.makedirs(os.path.dirname(config_path), exist_ok=True)
+
+with open(config_path, 'w') as f:
+    json.dump(config, f, indent=2)
+
+print("  ✓ Configured successfully")
+PYTHON_SCRIPT
+
+    local result=$?
+    if [[ $result -eq 0 ]]; then
+        CONFIGURED="$CONFIGURED OpenCode"
+    elif [[ $result -eq 2 ]]; then
+        SKIPPED="$SKIPPED OpenCode"
+    else
+        FAILED="$FAILED OpenCode"
+    fi
+    return 0
+}
+
 # Configure Claude Code via CLI
 configure_claude_code() {
     if ! command -v claude &> /dev/null; then
@@ -226,7 +300,7 @@ configure_claude_code() {
         return 0
     fi
 
-    if claude mcp add --transport http -s user seren https://mcp.serendb.com/mcp 2>/dev/null; then
+    if claude mcp add seren --url "https://mcp.serendb.com/mcp" --transport streamable-http --scope user 2>/dev/null; then
         echo "  ✓ Configured successfully"
         CONFIGURED="$CONFIGURED Claude-Code"
     else
@@ -254,7 +328,7 @@ configure_claude_code || true
 configure_claude_desktop "$CLAUDE_DESKTOP_PATH" || true
 configure_json_client "Cursor" "$HOME/.cursor/mcp.json" "mcpServers" "url" || true
 configure_json_client "Windsurf" "$HOME/.codeium/windsurf/mcp_config.json" "mcpServers" "serverUrl" || true
-configure_json_client "OpenCode" "$HOME/.config/opencode/opencode.json" "mcp" "url" || true
+configure_opencode || true
 configure_json_client "Gemini CLI" "$HOME/.gemini/settings.json" "mcpServers" "httpUrl" || true
 configure_codex || true
 
