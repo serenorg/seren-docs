@@ -12,6 +12,7 @@ on:
       - 'scripts/**'
       - 'templates/**'
       - 'manual/**'
+      - 'static/**'
 
 permissions:
   contents: read
@@ -48,6 +49,34 @@ jobs:
 
       - name: Build manual guides
         run: node scripts/build-guides.js
+
+      - name: Copy static files and create headers
+        run: |
+          # Copy static files
+          if [ -d "static" ]; then
+            cp -r static/* dist/
+            echo "Copied static files to dist/"
+          fi
+
+          # Create _headers for Cloudflare Pages
+          cat > dist/_headers << 'EOF'
+          /llms.txt
+            Access-Control-Allow-Origin: *
+            Content-Type: text/plain; charset=utf-8
+          /llms-full.txt
+            Access-Control-Allow-Origin: *
+            Content-Type: text/plain; charset=utf-8
+          /install.sh
+            Access-Control-Allow-Origin: *
+            Content-Type: text/plain; charset=utf-8
+          /install.ps1
+            Access-Control-Allow-Origin: *
+            Content-Type: text/plain; charset=utf-8
+          /*
+            Cache-Control: public, max-age=3600
+          EOF
+          echo "Created _headers"
+          ls -la dist/
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
