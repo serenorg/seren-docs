@@ -86,3 +86,13 @@ jobs:
           projectName: seren-docs
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger seren_website rebuild
+        if: success()
+        run: |
+          if [ -n "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+            echo "Triggered seren_website rebuild"
+          else
+            echo "VERCEL_DEPLOY_HOOK not configured, skipping"
+          fi
