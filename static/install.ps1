@@ -391,10 +391,44 @@ if (($Configured.Count -eq 0) -and ($Skipped.Count -eq 0) -and ($MissingDeps.Cou
     exit 1
 }
 
+# If Claude Desktop was configured and Node.js is available, trigger OAuth now
+if ($Configured -contains "Claude-Desktop") {
+    Write-Host ""
+    Write-Host "Authenticating with Seren..."
+    Write-Host "  A browser window will open. Please sign in to complete setup."
+    Write-Host ""
+
+    try {
+        # Run mcp-remote to trigger OAuth - it will open browser for auth
+        $process = Start-Process -FilePath "npx" -ArgumentList "-y", "mcp-remote", "https://mcp.serendb.com/mcp" -PassThru -NoNewWindow
+
+        # Wait up to 60 seconds for auth to complete
+        $timeout = 60
+        $elapsed = 0
+        while (-not $process.HasExited -and $elapsed -lt $timeout) {
+            Start-Sleep -Seconds 2
+            $elapsed += 2
+            Write-Host "." -NoNewline
+        }
+        Write-Host ""
+
+        if (-not $process.HasExited) {
+            $process.Kill()
+            Write-Host "  ✓ Authentication started - complete in browser if needed"
+        } else {
+            Write-Host "  ✓ Authentication complete"
+        }
+    } catch {
+        Write-Host "  ⚠ Could not start authentication. Run Claude Desktop to authenticate."
+    }
+}
+
+Write-Host ""
+Write-Host "=============================="
+Write-Host "Setup complete!"
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "  1. Restart any configured applications"
 Write-Host "  2. Seren tools will be available automatically"
-Write-Host "  3. On first use, authenticate at serendb.com"
 Write-Host ""
 Write-Host "Documentation: https://docs.serendb.com/mcp/"
