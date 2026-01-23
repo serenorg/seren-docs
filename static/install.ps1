@@ -391,45 +391,13 @@ if (($Configured.Count -eq 0) -and ($Skipped.Count -eq 0) -and ($MissingDeps.Cou
     exit 1
 }
 
-# If Claude Desktop was configured and Node.js is available, trigger OAuth now
-if ($Configured -contains "Claude-Desktop") {
-    Write-Host ""
-    Write-Host "Authenticating with Seren..."
-    Write-Host "  A browser window will open. Please sign in to complete setup."
-    Write-Host ""
-
-    try {
-        # Run mcp-remote directly to trigger OAuth - opens browser for auth
-        # Use Start-Process with -Wait to run in background, timeout after 30s
-        $job = Start-Job -ScriptBlock {
-            & npx -y mcp-remote https://mcp.serendb.com/mcp 2>&1
-        }
-
-        # Wait up to 30 seconds for auth flow to start
-        $completed = Wait-Job -Job $job -Timeout 30
-
-        if ($completed) {
-            $output = Receive-Job -Job $job
-            Write-Host "  ✓ Authentication complete"
-        } else {
-            Stop-Job -Job $job
-            Write-Host "  ✓ Browser opened - complete sign-in if prompted"
-        }
-        Remove-Job -Job $job -Force 2>$null
-    } catch {
-        # Fallback: just open the auth URL directly in browser
-        Write-Host "  Opening browser for authentication..."
-        Start-Process "https://mcp.serendb.com/mcp"
-        Write-Host "  ✓ Complete sign-in in your browser"
-    }
-}
-
 Write-Host ""
 Write-Host "=============================="
 Write-Host "Setup complete!"
 Write-Host ""
 Write-Host "Next steps:"
-Write-Host "  1. Restart any configured applications"
-Write-Host "  2. Seren tools will be available automatically"
+Write-Host "  1. Restart Claude Desktop"
+Write-Host "  2. A browser will open to sign in to Seren"
+Write-Host "  3. After sign-in, Seren tools will be available"
 Write-Host ""
 Write-Host "Documentation: https://docs.serendb.com/mcp/"
