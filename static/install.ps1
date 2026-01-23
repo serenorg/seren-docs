@@ -399,27 +399,28 @@ if ($Configured -contains "Claude-Desktop") {
     Write-Host ""
 
     try {
-        # Run mcp-remote to trigger OAuth - it will open browser for auth
-        $process = Start-Process -FilePath "npx" -ArgumentList "-y", "mcp-remote", "https://mcp.serendb.com/mcp" -PassThru -NoNewWindow
-
-        # Wait up to 60 seconds for auth to complete
-        $timeout = 60
-        $elapsed = 0
-        while (-not $process.HasExited -and $elapsed -lt $timeout) {
-            Start-Sleep -Seconds 2
-            $elapsed += 2
-            Write-Host "." -NoNewline
+        # Run mcp-remote directly to trigger OAuth - opens browser for auth
+        # Use Start-Process with -Wait to run in background, timeout after 30s
+        $job = Start-Job -ScriptBlock {
+            & npx -y mcp-remote https://mcp.serendb.com/mcp 2>&1
         }
-        Write-Host ""
 
-        if (-not $process.HasExited) {
-            $process.Kill()
-            Write-Host "  ✓ Authentication started - complete in browser if needed"
-        } else {
+        # Wait up to 30 seconds for auth flow to start
+        $completed = Wait-Job -Job $job -Timeout 30
+
+        if ($completed) {
+            $output = Receive-Job -Job $job
             Write-Host "  ✓ Authentication complete"
+        } else {
+            Stop-Job -Job $job
+            Write-Host "  ✓ Browser opened - complete sign-in if prompted"
         }
+        Remove-Job -Job $job -Force 2>$null
     } catch {
-        Write-Host "  ⚠ Could not start authentication. Run Claude Desktop to authenticate."
+        # Fallback: just open the auth URL directly in browser
+        Write-Host "  Opening browser for authentication..."
+        Start-Process "https://mcp.serendb.com/mcp"
+        Write-Host "  ✓ Complete sign-in in your browser"
     }
 }
 
