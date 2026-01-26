@@ -32,6 +32,11 @@ async function fetchOpenApiSpec() {
   }
   const spec = await response.text();
   console.log(`Fetched OpenAPI spec (${spec.length} bytes)`);
+
+  // Save fetched spec to disk for other build scripts to use
+  fs.writeFileSync(OPENAPI_PATH, spec);
+  console.log('Saved fetched spec to openapi.json');
+
   return spec;
 }
 
