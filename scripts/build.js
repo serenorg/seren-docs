@@ -99,6 +99,25 @@ function createHeaders() {
   console.log('Created _headers');
 }
 
+async function fetchInstallScripts() {
+  const scripts = [
+    { name: 'install.sh', url: 'https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh' },
+    { name: 'install.ps1', url: 'https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.ps1' },
+  ];
+
+  for (const { name, url } of scripts) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      fs.writeFileSync(path.join(DIST, name), text);
+      console.log(`Fetched ${name} from seren-local repo`);
+    } catch (err) {
+      console.error(`Failed to fetch ${name}: ${err.message}`);
+    }
+  }
+}
+
 async function main() {
   console.log('SerenAI Documentation Build');
   console.log('===========================');
@@ -130,6 +149,9 @@ async function main() {
       // Continue with other steps even if one fails
     }
   }
+
+  // Fetch install scripts from seren-local repo
+  await fetchInstallScripts();
 
   // Copy static files and create config files
   copyStaticFiles();
