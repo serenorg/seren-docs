@@ -50,11 +50,17 @@ jobs:
       - name: Build manual guides
         run: node scripts/build-guides.js
 
+      - name: Fetch install scripts from seren-local
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh" -o dist/install
+          curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.ps1" -o dist/install.ps1
+          echo "Fetched install scripts from seren-local"
+
       - name: Copy static files and create headers
         run: |
-          # Copy static files
+          # Copy static files (won't overwrite install scripts fetched above)
           if [ -d "static" ]; then
-            cp -r static/* dist/
+            cp -rn static/* dist/ 2>/dev/null || cp -r --no-clobber static/* dist/ 2>/dev/null || true
             echo "Copied static files to dist/"
           fi
 
@@ -66,7 +72,7 @@ jobs:
           /llms-full.txt
             Access-Control-Allow-Origin: *
             Content-Type: text/plain; charset=utf-8
-          /install.sh
+          /install
             Access-Control-Allow-Origin: *
             Content-Type: text/plain; charset=utf-8
           /install.ps1

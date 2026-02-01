@@ -953,7 +953,7 @@ function generateInstallHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Install Seren MCP Server</title>
+  <title>Install Seren Desktop</title>
   <style>${COMMON_STYLES}
     .install-box {
       background: var(--code-bg);
@@ -1036,44 +1036,41 @@ function generateInstallHtml() {
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
     <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
-      <h3 style="margin-top: 0; color: var(--primary);">Option A: Cursor IDE</h3>
-      <p>Cursor is a free AI-powered code editor with native MCP support.</p>
+      <h3 style="margin-top: 0; color: var(--primary);">Option A: Seren Desktop</h3>
+      <p>Download the Seren Desktop app for your operating system.</p>
       <ul style="margin: 1rem 0;">
-        <li>Full-featured IDE based on VS Code</li>
-        <li>Native MCP support - works out of the box</li>
-        <li>No Node.js or other dependencies needed</li>
-        <li>AI-assisted coding with Claude, GPT-4, and more</li>
-        <li>Free tier available</li>
+        <li>One-click install - no dependencies needed</li>
+        <li>Built-in MCP server and AI agent support</li>
+        <li>Local file access and database management</li>
+        <li>Automatic updates</li>
       </ul>
-      <p><strong>Setup:</strong> Download Cursor, then run the installer below.</p>
-      <a href="https://www.cursor.com/downloads" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Download Cursor</a>
+      <p><strong>Setup:</strong> Click below to download for your OS.</p>
+      <a id="desktop-download" href="https://github.com/serenorg/seren-desktop/releases" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">
+        <span id="os-icon"></span> <span id="os-label">Download Seren Desktop</span>
+      </a>
     </div>
 
     <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
-      <h3 style="margin-top: 0; color: var(--primary);">Option B: Chat Interface</h3>
-      <p>No download. No installation. Just open your browser.</p>
+      <h3 style="margin-top: 0; color: var(--primary);">Option B: Install Seren Desktop Locally</h3>
+      <p>Install the Seren runtime locally via the command line.</p>
       <ul style="margin: 1rem 0;">
-        <li>Works instantly in any browser</li>
-        <li>No software to install or configure</li>
-        <li>Full Seren capabilities</li>
-        <li>Works on any device (desktop, tablet, mobile)</li>
+        <li>Auto-detects your system and installs dependencies</li>
+        <li>Installs @serendb/runtime into ~/.seren-local</li>
+        <li>Creates desktop shortcuts automatically</li>
+        <li>Configures all detected AI tools (Claude, Cursor, etc.)</li>
       </ul>
-      <p><strong>Setup:</strong> Just click the button and sign in.</p>
-      <a href="https://serendb.com/chat" target="_blank" style="display: inline-block; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">Open Chat Interface</a>
+      <p><strong>Setup:</strong> Run the command below for your OS.</p>
+
+      <div class="install-box" style="margin-bottom: 1rem;">
+        <h3>macOS / Linux</h3>
+        <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install | sh</code></pre>
+      </div>
+
+      <div class="install-box">
+        <h3>Windows (PowerShell)</h3>
+        <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://serendb.com/install.ps1 | iex</code></pre>
+      </div>
     </div>
-  </div>
-
-  <h2>Install Seren MCP</h2>
-  <p>Already have an AI tool installed? Run the installer to configure it:</p>
-
-  <div class="install-box">
-    <h3>macOS / Linux</h3>
-    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install.sh | bash</code></pre>
-  </div>
-
-  <div class="install-box">
-    <h3>Windows (PowerShell)</h3>
-    <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://serendb.com/install.ps1 | iex</code></pre>
   </div>
 
   <h2>Supported Platforms</h2>
@@ -1122,6 +1119,25 @@ function generateInstallHtml() {
       }, 2000);
     });
   }
+
+  // Auto-detect OS for desktop download button
+  (function() {
+    var ua = navigator.userAgent || navigator.platform || '';
+    var icon = document.getElementById('os-icon');
+    var label = document.getElementById('os-label');
+    if (/Mac/i.test(ua)) {
+      icon.textContent = '\\u{F8FF}';
+      label.textContent = 'Download for macOS';
+    } else if (/Win/i.test(ua)) {
+      icon.textContent = '\\u{1FA9F}';
+      label.textContent = 'Download for Windows';
+    } else if (/Linux/i.test(ua)) {
+      icon.textContent = '\\u{1F427}';
+      label.textContent = 'Download for Linux';
+    } else {
+      label.textContent = 'Download Seren Desktop';
+    }
+  })();
   </script>
 </body>
 </html>`;
