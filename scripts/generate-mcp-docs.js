@@ -1034,42 +1034,40 @@ function generateInstallHtml() {
 
   <h2>Choose Your Path</h2>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
-    <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
-      <h3 style="margin-top: 0; color: var(--primary);">Option A: Seren Desktop</h3>
-      <p>Download the Seren Desktop app for your operating system.</p>
-      <ul style="margin: 1rem 0;">
-        <li>One-click install - no dependencies needed</li>
-        <li>Built-in MCP server and AI agent support</li>
-        <li>Local file access and database management</li>
-        <li>Automatic updates</li>
-      </ul>
-      <p><strong>Setup:</strong> Click below to download for your OS.</p>
-      <a id="desktop-download" href="https://github.com/serenorg/seren-desktop/releases" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">
-        <span id="os-icon"></span> <span id="os-label">Download Seren Desktop</span>
-      </a>
+  <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+    <h3 style="margin-top: 0; color: var(--primary);">Option A: Seren Desktop</h3>
+    <p>Download the Seren Desktop app for your operating system.</p>
+    <ul style="margin: 1rem 0;">
+      <li>One-click install - no dependencies needed</li>
+      <li>Built-in MCP server and AI agent support</li>
+      <li>Local file access and database management</li>
+      <li>Automatic updates</li>
+    </ul>
+    <p><strong>Setup:</strong> Click below to download for your OS.</p>
+    <a id="desktop-download" href="https://github.com/serenorg/seren-desktop/releases" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">
+      <span id="os-icon"></span> <span id="os-label">Download Seren Desktop</span>
+    </a>
+  </div>
+
+  <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+    <h3 style="margin-top: 0; color: var(--primary);">Option B: Install Seren Desktop Locally</h3>
+    <p>Install the Seren runtime locally via the command line.</p>
+    <ul style="margin: 1rem 0;">
+      <li>Auto-detects your system and installs dependencies</li>
+      <li>Installs @serendb/runtime into ~/.seren-local</li>
+      <li>Creates desktop shortcuts automatically</li>
+      <li>Configures all detected AI tools (Claude, Cursor, etc.)</li>
+    </ul>
+    <p><strong>Setup:</strong> Run the command below for your OS.</p>
+
+    <div class="install-box" style="margin-bottom: 1rem;">
+      <h3>macOS / Linux</h3>
+      <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install | sh</code></pre>
     </div>
 
-    <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem;">
-      <h3 style="margin-top: 0; color: var(--primary);">Option B: Install Seren Desktop Locally</h3>
-      <p>Install the Seren runtime locally via the command line.</p>
-      <ul style="margin: 1rem 0;">
-        <li>Auto-detects your system and installs dependencies</li>
-        <li>Installs @serendb/runtime into ~/.seren-local</li>
-        <li>Creates desktop shortcuts automatically</li>
-        <li>Configures all detected AI tools (Claude, Cursor, etc.)</li>
-      </ul>
-      <p><strong>Setup:</strong> Run the command below for your OS.</p>
-
-      <div class="install-box" style="margin-bottom: 1rem;">
-        <h3>macOS / Linux</h3>
-        <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install | sh</code></pre>
-      </div>
-
-      <div class="install-box">
-        <h3>Windows (PowerShell)</h3>
-        <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://serendb.com/install.ps1 | iex</code></pre>
-      </div>
+    <div class="install-box">
+      <h3>Windows (PowerShell)</h3>
+      <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-win">irm https://serendb.com/install.ps1 | iex</code></pre>
     </div>
   </div>
 
