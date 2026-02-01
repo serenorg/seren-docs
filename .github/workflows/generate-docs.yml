@@ -52,7 +52,7 @@ jobs:
 
       - name: Fetch install scripts from seren-local
         run: |
-          curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh" -o dist/install
+          curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh" -o dist/install.sh
           curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.ps1" -o dist/install.ps1
           echo "Fetched install scripts from seren-local"
 
@@ -72,7 +72,7 @@ jobs:
           /llms-full.txt
             Access-Control-Allow-Origin: *
             Content-Type: text/plain; charset=utf-8
-          /install
+          /install.sh
             Access-Control-Allow-Origin: *
             Content-Type: text/plain; charset=utf-8
           /install.ps1

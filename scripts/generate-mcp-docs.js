@@ -1062,7 +1062,7 @@ function generateInstallHtml() {
 
     <div class="install-box" style="margin-bottom: 1rem;">
       <h3>macOS / Linux</h3>
-      <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install | sh</code></pre>
+      <pre><button class="copy-btn" onclick="copyCommand(this)">Copy</button><code id="cmd-unix">curl -fsSL https://serendb.com/install.sh | sh</code></pre>
     </div>
 
     <div class="install-box">
