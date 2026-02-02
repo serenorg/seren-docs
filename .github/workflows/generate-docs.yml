@@ -2,7 +2,7 @@ name: Generate Documentation
 
 on:
   repository_dispatch:
-    types: [openapi-updated, mcp-updated]
+    types: [openapi-updated, mcp-updated, install-scripts-updated]
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'  # Daily at midnight UTC
