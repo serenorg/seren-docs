@@ -33,6 +33,7 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} - SerenAI Documentation</title>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>
     :root {
       --primary: #0066cc;

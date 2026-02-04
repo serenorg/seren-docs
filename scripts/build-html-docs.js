@@ -260,6 +260,7 @@ function generateHtml(spec) {
   <title>SerenAI API Documentation</title>
   <meta name="description" content="Pay Per Call Agentic Commerce for public and private data. ${totalEndpoints} API endpoints.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>
     :root {
       --primary: #0066cc;

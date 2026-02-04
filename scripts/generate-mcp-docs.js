@@ -982,6 +982,7 @@ function generateInstallHtml() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Install Seren Desktop</title>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>${COMMON_STYLES}
     .install-box {
       background: var(--code-bg);
@@ -1250,6 +1251,7 @@ function generateToolsHtml(toolsJson) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seren MCP Tools Reference</title>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>${COMMON_STYLES}
     .category-nav {
       background: var(--code-bg);
