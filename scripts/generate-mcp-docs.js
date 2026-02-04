@@ -1152,15 +1152,14 @@ function generateInstallHtml() {
     });
   }
 
-  // Auto-detect OS and highlight the recommended download
+  // Auto-detect OS and make detected download prominent
   (function() {
     var ua = navigator.userAgent || navigator.platform || '';
     var buttons = document.querySelectorAll('.download-btn');
     var recommendedOs = null;
 
     if (/Mac/i.test(ua)) {
-      // Check for Apple Silicon vs Intel
-      recommendedOs = /arm64|aarch64/i.test(ua) ? 'macos-arm64' : 'macos-arm64'; // Default to ARM for modern Macs
+      recommendedOs = /arm64|aarch64/i.test(ua) ? 'macos-arm64' : 'macos-arm64';
     } else if (/Win/i.test(ua)) {
       recommendedOs = 'windows';
     } else if (/Linux/i.test(ua)) {
@@ -1171,7 +1170,13 @@ function generateInstallHtml() {
       buttons.forEach(function(btn) {
         if (btn.dataset.os === recommendedOs) {
           btn.style.background = 'var(--primary)';
-          btn.innerHTML = '\\u2713 ' + btn.innerHTML + ' (Recommended)';
+          btn.style.padding = '0.8rem 1.5rem';
+          btn.style.fontSize = '1.1rem';
+          btn.style.order = '-1';
+        } else {
+          btn.style.opacity = '0.6';
+          btn.style.fontSize = '0.8rem';
+          btn.style.padding = '0.4rem 0.8rem';
         }
       });
     }
