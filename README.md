@@ -14,7 +14,7 @@ SerenDB is an agentic commerce platform where AI agents are the primary API cons
 | [docs.serendb.com/openapi.json](https://docs.serendb.com/openapi.json) | Raw OpenAPI 3.0 spec for programmatic access |
 | [docs.serendb.com/llms.txt](https://docs.serendb.com/llms.txt) | LLM-optimized context following [llmstxt.org](https://llmstxt.org) |
 | [docs.serendb.com/skills.md](https://docs.serendb.com/skills.md) | Publisher skills reference |
-| [docs.serendb.com/mcp/](https://docs.serendb.com/mcp/) | MCP server installation and tool reference |
+| [docs.serendb.com/install-seren/](https://docs.serendb.com/install-seren/) | MCP server installation and tool reference |
 | [docs.serendb.com/guides/](https://docs.serendb.com/guides/) | Step-by-step tutorials |
 
 All endpoints include CORS headers for cross-origin access.

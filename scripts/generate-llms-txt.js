@@ -210,7 +210,7 @@ Use the endpoints documented above with any HTTP client.
 - [Full API Reference](/llms-full.txt) - Complete endpoint documentation
 - [Create Publisher Guide](/guides/create-publisher.html) - Complete schema and curl examples
 - [MCP Publishers Guide](/guides/mcp-publishers.html) - MCP server integration
-- [MCP Tool Schemas](/mcp/tools.json) - Machine-readable tool definitions
+- [MCP Tool Schemas](/install-seren/tools.json) - Machine-readable tool definitions
 - [OpenAPI Specification](https://api.serendb.com/openapi.json) - Full OpenAPI spec
 `;
 }

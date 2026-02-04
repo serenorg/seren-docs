@@ -617,7 +617,7 @@ function generateHtml(spec) {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">Install Seren</a>
+      <a href="/install-seren/">Install Seren</a>
       <a href="/guides/">Guides</a>
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
@@ -634,7 +634,7 @@ function generateHtml(spec) {
         <a href="/openapi.json">openapi.json</a>
         <a href="/llms.txt">llms.txt</a>
         <a href="/llms-full.txt">llms-full.txt</a>
-        <a href="/mcp/tools.json">mcp/tools.json</a>
+        <a href="/install-seren/tools.json">install-seren/tools.json</a>
       </div>
     </aside>
 

@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const DIST_PATH = path.join(__dirname, '..', 'dist', 'mcp');
+const DIST_PATH = path.join(__dirname, '..', 'dist', 'install-seren');
 
 // Complete MCP tool definitions - 63 tools across 13 categories
 const MCP_TOOLS = [
@@ -939,7 +939,7 @@ Set \`READ_ONLY=true\` to block write operations (useful for shared deployments)
 ## More Information
 
 - [Full API Documentation](https://docs.serendb.com/)
-- [Tool Schemas](/mcp/tools.json)
+- [Tool Schemas](/install-seren/tools.json)
 - [GitHub Repository](https://github.com/serenorg/seren)
 `;
 
@@ -1022,7 +1022,7 @@ function generateInstallHtml() {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">Install Seren</a>
+      <a href="/install-seren/">Install Seren</a>
       <a href="/guides/">Guides</a>
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
@@ -1036,18 +1036,21 @@ function generateInstallHtml() {
   <h2>Choose Your Path</h2>
 
   <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
-    <h3 style="margin-top: 0; color: var(--primary);">Option A: Seren Desktop</h3>
-    <p>Download the Seren Desktop app for your operating system.</p>
+    <h3 style="margin-top: 0; color: var(--primary);">Option A: Download Signed Binary</h3>
+    <p>Download the signed Seren binary for your operating system.</p>
     <ul style="margin: 1rem 0;">
-      <li>One-click install - no dependencies needed</li>
+      <li>Code-signed binaries for macOS, Windows, and Linux</li>
       <li>Built-in MCP server and AI agent support</li>
-      <li>Local file access and database management</li>
-      <li>Automatic updates</li>
+      <li>No dependencies needed</li>
     </ul>
-    <p><strong>Setup:</strong> Click below to download for your OS.</p>
-    <a id="desktop-download" href="https://github.com/serenorg/seren-desktop/releases" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1.2rem; border-radius: 5px; text-decoration: none; font-weight: 500;">
-      <span id="os-icon"></span> <span id="os-label">Download Seren Desktop</span>
-    </a>
+    <p><strong>Download:</strong></p>
+    <div id="download-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-arm64" class="download-btn" data-os="macos-arm64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-x64" class="download-btn" data-os="macos-x64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-windows-x64.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-linux-x64" class="download-btn" data-os="linux" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (x64)</a>
+    </div>
+    <p style="font-size: 0.85rem; color: #666;">All binaries are code-signed. <a href="https://github.com/serenorg/seren-local/releases" target="_blank">View all releases</a></p>
   </div>
 
   <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
@@ -1102,7 +1105,7 @@ function generateInstallHtml() {
     <li>Querying the agent marketplace with SerenBucks</li>
     <li>Executing paid API calls to publishers like Firecrawl and Perplexity</li>
   </ul>
-  <p><a href="/mcp/tools.html">Tools Reference</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">llms.txt</a></p>
+  <p><a href="/install-seren/tools.html">Tools Reference</a> · <a href="/install-seren/tools.json">tools.json</a> · <a href="/install-seren/llms.txt">llms.txt</a></p>
 
   </div>
 
@@ -1119,22 +1122,28 @@ function generateInstallHtml() {
     });
   }
 
-  // Auto-detect OS for desktop download button
+  // Auto-detect OS and highlight the recommended download
   (function() {
     var ua = navigator.userAgent || navigator.platform || '';
-    var icon = document.getElementById('os-icon');
-    var label = document.getElementById('os-label');
+    var buttons = document.querySelectorAll('.download-btn');
+    var recommendedOs = null;
+
     if (/Mac/i.test(ua)) {
-      icon.textContent = '\\u{F8FF}';
-      label.textContent = 'Download for macOS';
+      // Check for Apple Silicon vs Intel
+      recommendedOs = /arm64|aarch64/i.test(ua) ? 'macos-arm64' : 'macos-arm64'; // Default to ARM for modern Macs
     } else if (/Win/i.test(ua)) {
-      icon.textContent = '\\u{1FA9F}';
-      label.textContent = 'Download for Windows';
+      recommendedOs = 'windows';
     } else if (/Linux/i.test(ua)) {
-      icon.textContent = '\\u{1F427}';
-      label.textContent = 'Download for Linux';
-    } else {
-      label.textContent = 'Download Seren Desktop';
+      recommendedOs = 'linux';
+    }
+
+    if (recommendedOs) {
+      buttons.forEach(function(btn) {
+        if (btn.dataset.os === recommendedOs) {
+          btn.style.background = 'var(--primary)';
+          btn.innerHTML = '\\u2713 ' + btn.innerHTML + ' (Recommended)';
+        }
+      });
     }
   })();
   </script>
@@ -1206,7 +1215,7 @@ function generateToolsHtml(toolsJson) {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">Install Seren</a>
+      <a href="/install-seren/">Install Seren</a>
       <a href="/guides/">Guides</a>
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
@@ -1218,7 +1227,7 @@ function generateToolsHtml(toolsJson) {
   <h1>Seren MCP Tools Reference</h1>
   <p>${toolsJson.tools.length} tools across ${Object.keys(categories).length} categories for managing databases and querying the agent marketplace.</p>
 
-  <p><a href="/mcp/">Install</a> · <a href="/mcp/tools.json">tools.json</a> · <a href="/mcp/llms.txt">mcp/llms.txt</a></p>
+  <p><a href="/install-seren/">Install</a> · <a href="/install-seren/tools.json">tools.json</a> · <a href="/install-seren/llms.txt">mcp/llms.txt</a></p>
 
   <div class="category-nav">
     <strong>Jump to:</strong> ${categoryNav}

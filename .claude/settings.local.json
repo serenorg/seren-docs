@@ -31,7 +31,15 @@
       "Bash(gh pr comment:*)",
       "mcp__seren__get_agent_publisher",
       "mcp__seren__execute_paid_api",
-      "mcp__seren__list_projects"
+      "mcp__seren__list_projects",
+      "Bash(gh run watch:*)",
+      "Bash(node scripts/generate-mcp-docs.js:*)",
+      "Bash(git remote:*)",
+      "Bash(npm run build:mcp:*)",
+      "Bash(node -e:*)",
+      "Bash(gh release view:*)",
+      "Bash(gh release:*)",
+      "Bash(npm run clean:*)"
     ]
   }
 }

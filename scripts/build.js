@@ -23,7 +23,7 @@ function run(cmd, description) {
 function ensureDirectories() {
   const dirs = [
     DIST,
-    path.join(DIST, 'mcp'),
+    path.join(DIST, 'install-seren'),
     path.join(DIST, 'guides')
   ];
 
@@ -55,6 +55,10 @@ function createRedirects() {
   const redirects = `
 # Redirect /api/* to main docs
 /api/*  /:splat  301
+
+# Redirect old /mcp/ URLs to /install-seren/
+/mcp/*  /install-seren/:splat  301
+/mcp    /install-seren/  301
 `.trim();
 
   fs.writeFileSync(path.join(DIST, '_redirects'), redirects);
@@ -73,11 +77,11 @@ function createHeaders() {
   Access-Control-Allow-Origin: *
   Content-Type: text/plain; charset=utf-8
 
-/mcp/llms.txt
+/install-seren/llms.txt
   Access-Control-Allow-Origin: *
   Content-Type: text/plain; charset=utf-8
 
-/mcp/tools.json
+/install-seren/tools.json
   Access-Control-Allow-Origin: *
   Content-Type: application/json; charset=utf-8
 

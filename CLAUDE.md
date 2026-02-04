@@ -14,7 +14,7 @@ npm run fetch:openapi          # Copy OpenAPI spec from ../serencore (requires s
 npm run build                  # Build all documentation (runs all steps below)
 npm run build:api              # Generate static HTML API docs → dist/index.html, dist/openapi.json
 npm run build:llms             # Generate llms.txt → dist/llms.txt, dist/llms-full.txt
-npm run build:mcp              # Generate MCP docs → dist/mcp/tools.json, dist/mcp/llms.txt
+npm run build:mcp              # Generate MCP docs → dist/install-seren/tools.json, dist/install-seren/llms.txt
 npm run dev                    # Build and serve on port 3000
 npm run clean                  # Delete and recreate dist/
 ```
@@ -39,7 +39,7 @@ openapi.json ─────────────┬──→ build-html-docs
                           │
 manual/guides/*.md ───────┴──→ build-guides.js ──→ dist/guides/*.html
 
-scripts/generate-mcp-docs.js ──→ dist/mcp/tools.json, dist/mcp/llms.txt
+scripts/generate-mcp-docs.js ──→ dist/install-seren/tools.json, dist/install-seren/llms.txt
 (67 hardcoded tool definitions)
 ```
 
