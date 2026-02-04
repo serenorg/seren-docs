@@ -617,10 +617,11 @@ function generateHtml(spec) {
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">Install MCP</a>
+      <a href="/mcp/">Install Seren</a>
       <a href="/guides/">Guides</a>
+      <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
-      <a href="https://console.serendb.com/login">Seren Console</a>
+      <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
   </header>
 

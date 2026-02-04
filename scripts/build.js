@@ -95,6 +95,11 @@ function createHeaders() {
   Access-Control-Allow-Origin: *
   Content-Type: text/plain; charset=utf-8
 
+# Skills documentation
+/skills.md
+  Access-Control-Allow-Origin: *
+  Content-Type: text/markdown; charset=utf-8
+
 # Cache control
 /*
   Cache-Control: public, max-age=3600
@@ -108,6 +113,7 @@ async function fetchInstallScripts() {
   const scripts = [
     { name: 'install.sh', url: 'https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh' },
     { name: 'install.ps1', url: 'https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.ps1' },
+    { name: 'skills.md', url: 'https://api.serendb.com/skill.md' },
   ];
 
   for (const { name, url } of scripts) {
