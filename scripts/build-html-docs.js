@@ -274,6 +274,38 @@ function generateHtml(spec) {
       --danger: #dc3545;
       --info: #17a2b8;
     }
+
+    /* Dark mode - system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #4da3ff;
+        --primary-dark: #0066cc;
+        --bg: #0d1117;
+        --bg-secondary: #161b22;
+        --text: #e6edf3;
+        --text-muted: #8b949e;
+        --border: #30363d;
+        --success: #3fb950;
+        --warning: #d29922;
+        --danger: #f85149;
+        --info: #58a6ff;
+      }
+    }
+
+    /* Dark mode - manual toggle */
+    [data-theme="dark"] {
+      --primary: #4da3ff;
+      --primary-dark: #0066cc;
+      --bg: #0d1117;
+      --bg-secondary: #161b22;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --border: #30363d;
+      --success: #3fb950;
+      --warning: #d29922;
+      --danger: #f85149;
+      --info: #58a6ff;
+    }
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -318,6 +350,18 @@ function generateHtml(spec) {
       opacity: 0.9;
     }
     .seren-header nav a:hover { opacity: 1; }
+    .theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-left: 24px;
+      opacity: 0.9;
+    }
+    .theme-toggle:hover { opacity: 1; background: rgba(255,255,255,0.3); }
 
     /* Layout */
     .container {
@@ -439,6 +483,20 @@ function generateHtml(spec) {
     .method-put { background: #fff3e0; color: #ef6c00; }
     .method-patch { background: #f3e5f5; color: #7b1fa2; }
     .method-delete { background: #ffebee; color: #c62828; }
+
+    /* Dark mode method colors */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .method-get { background: #1a3d2e; color: #3fb950; }
+      :root:not([data-theme="light"]) .method-post { background: #1a2d4e; color: #58a6ff; }
+      :root:not([data-theme="light"]) .method-put { background: #3d2e1a; color: #d29922; }
+      :root:not([data-theme="light"]) .method-patch { background: #2e1a3d; color: #bc8cff; }
+      :root:not([data-theme="light"]) .method-delete { background: #3d1a1a; color: #f85149; }
+    }
+    [data-theme="dark"] .method-get { background: #1a3d2e; color: #3fb950; }
+    [data-theme="dark"] .method-post { background: #1a2d4e; color: #58a6ff; }
+    [data-theme="dark"] .method-put { background: #3d2e1a; color: #d29922; }
+    [data-theme="dark"] .method-patch { background: #2e1a3d; color: #bc8cff; }
+    [data-theme="dark"] .method-delete { background: #3d1a1a; color: #f85149; }
     .path {
       font-family: 'SF Mono', Monaco, Consolas, monospace;
       font-size: 0.95rem;
@@ -519,6 +577,12 @@ function generateHtml(spec) {
     .prop-type {
       color: #6f42c1;
     }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .prop-name { color: #79c0ff; }
+      :root:not([data-theme="light"]) .prop-type { color: #d2a8ff; }
+    }
+    [data-theme="dark"] .prop-name { color: #79c0ff; }
+    [data-theme="dark"] .prop-type { color: #d2a8ff; }
     .prop-desc {
       color: var(--text-muted);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -544,6 +608,14 @@ function generateHtml(spec) {
     .response-success { background: #e8f5e9; }
     .response-client-error { background: #fff3e0; }
     .response-server-error { background: #ffebee; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .response-success { background: #1a3d2e; }
+      :root:not([data-theme="light"]) .response-client-error { background: #3d2e1a; }
+      :root:not([data-theme="light"]) .response-server-error { background: #3d1a1a; }
+    }
+    [data-theme="dark"] .response-success { background: #1a3d2e; }
+    [data-theme="dark"] .response-client-error { background: #3d2e1a; }
+    [data-theme="dark"] .response-server-error { background: #3d1a1a; }
     .response-code {
       font-weight: 700;
       margin-right: 8px;
@@ -622,6 +694,7 @@ function generateHtml(spec) {
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>
     </nav>
   </header>
 
@@ -652,6 +725,32 @@ function generateHtml(spec) {
       ${sectionsHtml}
     </main>
   </div>
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      let newTheme;
+      if (current === 'dark') newTheme = 'light';
+      else if (current === 'light') newTheme = 'dark';
+      else newTheme = prefersDark ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateToggleIcon();
+    }
+    function updateToggleIcon() {
+      const btn = document.querySelector('.theme-toggle');
+      const theme = document.documentElement.getAttribute('data-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = theme === 'dark' || (theme !== 'light' && prefersDark);
+      btn.textContent = isDark ? '☀️' : '🌙';
+    }
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      updateToggleIcon();
+    })();
+  </script>
 </body>
 </html>`;
 }

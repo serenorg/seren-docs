@@ -41,6 +41,22 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
       --code-bg: #f5f5f5;
       --border: #e0e0e0;
     }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #4da3ff;
+        --bg: #0d1117;
+        --text: #e6edf3;
+        --code-bg: #161b22;
+        --border: #30363d;
+      }
+    }
+    [data-theme="dark"] {
+      --primary: #4da3ff;
+      --bg: #0d1117;
+      --text: #e6edf3;
+      --code-bg: #161b22;
+      --border: #30363d;
+    }
     * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -83,6 +99,18 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
       transition: opacity 0.2s;
     }
     .seren-header nav a:hover { opacity: 1; }
+    .theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-left: 24px;
+      opacity: 0.9;
+    }
+    .theme-toggle:hover { opacity: 1; background: rgba(255,255,255,0.3); }
     /* Mobile responsiveness */
     @media (max-width: 768px) {
       .seren-header {
@@ -190,6 +218,7 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>
     </nav>
   </div>
   <div class="content">
@@ -216,6 +245,31 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
     };
     pre.appendChild(btn);
   });
+
+  function toggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var newTheme;
+    if (current === 'dark') newTheme = 'light';
+    else if (current === 'light') newTheme = 'dark';
+    else newTheme = prefersDark ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleIcon();
+  }
+  function updateToggleIcon() {
+    var btn = document.querySelector('.theme-toggle');
+    var theme = document.documentElement.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = theme === 'dark' || (theme !== 'light' && prefersDark);
+    btn.textContent = isDark ? '☀️' : '🌙';
+  }
+  (function() {
+    var saved = localStorage.getItem('theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+    updateToggleIcon();
+  })();
   </script>
 </body>
 </html>`;

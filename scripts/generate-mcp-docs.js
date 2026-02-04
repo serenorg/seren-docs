@@ -693,6 +693,22 @@ const COMMON_STYLES = `
       --code-bg: #f5f5f5;
       --border: #e0e0e0;
     }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #4da3ff;
+        --bg: #0d1117;
+        --text: #e6edf3;
+        --code-bg: #161b22;
+        --border: #30363d;
+      }
+    }
+    [data-theme="dark"] {
+      --primary: #4da3ff;
+      --bg: #0d1117;
+      --text: #e6edf3;
+      --code-bg: #161b22;
+      --border: #30363d;
+    }
     * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -742,6 +758,18 @@ const COMMON_STYLES = `
       transition: opacity 0.2s;
     }
     .seren-header nav a:hover { opacity: 1; }
+    .theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-left: 24px;
+      opacity: 0.9;
+    }
+    .theme-toggle:hover { opacity: 1; background: rgba(255,255,255,0.3); }
     /* Mobile responsiveness */
     @media (max-width: 768px) {
       .seren-header {
@@ -1027,6 +1055,7 @@ function generateInstallHtml() {
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>
     </nav>
   </div>
 
@@ -1045,12 +1074,12 @@ function generateInstallHtml() {
     </ul>
     <p><strong>Download:</strong></p>
     <div id="download-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-arm64" class="download-btn" data-os="macos-arm64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
-      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-x64" class="download-btn" data-os="macos-x64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
-      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-windows-x64.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
-      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-linux-x64" class="download-btn" data-os="linux" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (x64)</a>
+      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_aarch64.dmg" class="download-btn" data-os="macos-arm64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
+      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_x64.dmg" class="download-btn" data-os="macos-x64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
+      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_x64-setup.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
+      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_amd64.deb" class="download-btn" data-os="linux" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (x64)</a>
     </div>
-    <p style="font-size: 0.85rem; color: #666;">All binaries are code-signed. <a href="https://github.com/serenorg/seren-local/releases" target="_blank">View all releases</a></p>
+    <p style="font-size: 0.85rem; color: #666;">All binaries are code-signed. <a href="https://github.com/serenorg/seren-desktop/releases" target="_blank">View all releases</a></p>
   </div>
 
   <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
@@ -1146,6 +1175,31 @@ function generateInstallHtml() {
       });
     }
   })();
+
+  function toggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var newTheme;
+    if (current === 'dark') newTheme = 'light';
+    else if (current === 'light') newTheme = 'dark';
+    else newTheme = prefersDark ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleIcon();
+  }
+  function updateToggleIcon() {
+    var btn = document.querySelector('.theme-toggle');
+    var theme = document.documentElement.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = theme === 'dark' || (theme !== 'light' && prefersDark);
+    btn.textContent = isDark ? '☀️' : '🌙';
+  }
+  (function() {
+    var saved = localStorage.getItem('theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+    updateToggleIcon();
+  })();
   </script>
 </body>
 </html>`;
@@ -1220,6 +1274,7 @@ function generateToolsHtml(toolsJson) {
       <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>
     </nav>
   </div>
 
@@ -1246,6 +1301,32 @@ function generateToolsHtml(toolsJson) {
   <h2>Read-Only Mode</h2>
   <p>Set <code>READ_ONLY=true</code> to block write operations (useful for shared deployments).</p>
   </div>
+  <script>
+  function toggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var newTheme;
+    if (current === 'dark') newTheme = 'light';
+    else if (current === 'light') newTheme = 'dark';
+    else newTheme = prefersDark ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleIcon();
+  }
+  function updateToggleIcon() {
+    var btn = document.querySelector('.theme-toggle');
+    var theme = document.documentElement.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = theme === 'dark' || (theme !== 'light' && prefersDark);
+    btn.textContent = isDark ? '☀️' : '🌙';
+  }
+  (function() {
+    var saved = localStorage.getItem('theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+    updateToggleIcon();
+  })();
+  </script>
 </body>
 </html>`;
 }
