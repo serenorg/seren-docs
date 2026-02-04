@@ -185,8 +185,9 @@ const HTML_TEMPLATE = (title, content) => `<!DOCTYPE html>
     </div>
     <nav>
       <a href="/">API Docs</a>
-      <a href="/mcp/">Install MCP</a>
+      <a href="/mcp/">Install Seren</a>
       <a href="/guides/">Guides</a>
+      <a href="/skills.md">Skills</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
     </nav>
@@ -244,7 +245,7 @@ function buildGuidesIndex(guides) {
     <h2>Additional Resources</h2>
     <ul>
       <li><a href="/">API Reference</a> - Complete REST API documentation</li>
-      <li><a href="/mcp/">Install MCP</a> - AI assistant integration</li>
+      <li><a href="/mcp/">Install Seren</a> - AI assistant integration</li>
       <li><a href="/llms.txt">llms.txt</a> - LLM-optimized context</li>
     </ul>
   `;
