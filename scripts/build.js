@@ -81,6 +81,11 @@ function createHeaders() {
   Access-Control-Allow-Origin: *
   Content-Type: application/json; charset=utf-8
 
+# OpenAPI spec for AI agents
+/openapi.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=utf-8
+
 # Install scripts
 /install.sh
   Access-Control-Allow-Origin: *
@@ -136,7 +141,7 @@ async function main() {
 
   // Run all build steps
   const steps = [
-    ['npm run build:api', 'Generating Scalar API documentation'],
+    ['node scripts/build-html-docs.js', 'Generating static HTML API documentation'],
     ['npm run build:llms', 'Generating llms.txt files'],
     ['npm run build:mcp', 'Generating MCP documentation'],
     ['node scripts/build-guides.js', 'Building manual guides']

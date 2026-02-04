@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-seren-docs generates documentation for SerenAI from OpenAPI specs and manual guides. Output formats include interactive API docs (Scalar), llms.txt files, and MCP tool schemas.
+seren-docs generates documentation for SerenAI from OpenAPI specs and manual guides. All output is static HTML (no JavaScript required) for AI agent readability. Output formats include static HTML API docs, llms.txt files, MCP tool schemas, and the raw OpenAPI spec.
 
 ## Commands
 
@@ -12,10 +12,10 @@ seren-docs generates documentation for SerenAI from OpenAPI specs and manual gui
 npm install                    # Install dependencies
 npm run fetch:openapi          # Copy OpenAPI spec from ../serencore (requires sibling checkout)
 npm run build                  # Build all documentation (runs all steps below)
-npm run build:api              # Generate Scalar API docs → dist/index.html
+npm run build:api              # Generate static HTML API docs → dist/index.html, dist/openapi.json
 npm run build:llms             # Generate llms.txt → dist/llms.txt, dist/llms-full.txt
 npm run build:mcp              # Generate MCP docs → dist/mcp/tools.json, dist/mcp/llms.txt
-npm run dev                    # Preview Scalar docs on port 3000
+npm run dev                    # Build and serve on port 3000
 npm run clean                  # Delete and recreate dist/
 ```
 
@@ -33,13 +33,14 @@ CI handles this automatically by checking out the private serencore repo.
 ## Architecture
 
 ```text
-openapi.json ─────────────┬──→ build-scalar.js ──→ dist/index.html
-(from serencore)          ├──→ generate-llms-txt.js ──→ dist/llms.txt, dist/llms-full.txt
+openapi.json ─────────────┬──→ build-html-docs.js ──→ dist/index.html (static HTML, no JS)
+(from serencore)          │                       ──→ dist/openapi.json (raw spec)
+                          ├──→ generate-llms-txt.js ──→ dist/llms.txt, dist/llms-full.txt
                           │
 manual/guides/*.md ───────┴──→ build-guides.js ──→ dist/guides/*.html
 
 scripts/generate-mcp-docs.js ──→ dist/mcp/tools.json, dist/mcp/llms.txt
-(31 hardcoded tool definitions)
+(67 hardcoded tool definitions)
 ```
 
 **build.js** orchestrates all steps with graceful error handling (continues on failures).
@@ -48,7 +49,8 @@ scripts/generate-mcp-docs.js ──→ dist/mcp/tools.json, dist/mcp/llms.txt
 
 | File                           | Purpose                                                                    |
 | ------------------------------ | -------------------------------------------------------------------------- |
-| `scripts/generate-mcp-docs.js` | Contains all 31 MCP tool definitions inline - edit this to update MCP docs |
+| `scripts/build-html-docs.js`   | Generates static HTML API docs from OpenAPI (no JS, AI-readable)           |
+| `scripts/generate-mcp-docs.js` | Contains all 67 MCP tool definitions inline - edit this to update MCP docs |
 | `scripts/generate-llms-txt.js` | `llms.txt` is mostly static; `llms-full.txt` parses OpenAPI endpoints      |
 | `manual/guides/quickstart.md`  | Only manual guide currently - add more `.md` files here                    |
 | `static/`                      | Optional - any files here are copied to `dist/` root                       |

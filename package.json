@@ -4,19 +4,16 @@
   "description": "SerenAI Documentation - Pay Per Call Agentic Commerce for public and private data",
   "scripts": {
     "build": "node scripts/build.js",
-    "build:api": "node scripts/build-scalar.js",
+    "build:api": "node scripts/build-html-docs.js",
     "build:llms": "node scripts/generate-llms-txt.js",
     "build:mcp": "node scripts/generate-mcp-docs.js",
     "fetch:openapi": "cp ../serencore/seren-core/openapi.json openapi.json",
-    "dev": "npx @scalar/cli serve openapi.json --port 3000",
+    "dev": "npm run build && npx http-server dist -p 3000 -c-1",
     "clean": "rm -rf dist && mkdir -p dist"
   },
   "dependencies": {
     "handlebars": "^4.7.8",
     "marked": "^11.1.1"
-  },
-  "devDependencies": {
-    "@scalar/cli": "^0.2.0"
   },
   "author": "SerenAI",
   "license": "MIT"
