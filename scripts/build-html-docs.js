@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const OPENAPI_URL = 'https://raw.githubusercontent.com/serenorg/serencore/main/seren-core/openapi.json';
+const OPENAPI_URL = 'https://raw.githubusercontent.com/serenorg/serencore/main/openapi/openapi.json';
 const OPENAPI_PATH = path.join(__dirname, '..', 'openapi.json');
 const DIST_PATH = path.join(__dirname, '..', 'dist');
 const OUTPUT_PATH = path.join(DIST_PATH, 'index.html');

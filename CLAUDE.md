@@ -23,7 +23,7 @@ npm run clean                  # Delete and recreate dist/
 
 ## Local Development Prerequisite
 
-`npm run fetch:openapi` copies from `../serencore/seren-core/openapi.json`. For local development, either:
+`npm run fetch:openapi` copies from `../serencore/openapi/openapi.json`. For local development, either:
 
 1. Clone serencore as a sibling directory, or
 2. Manually place `openapi.json` in the project root
