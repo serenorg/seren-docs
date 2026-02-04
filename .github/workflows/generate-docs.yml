@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Create dist directory
-        run: mkdir -p dist/mcp dist/guides
+        run: mkdir -p dist/install-seren dist/guides
 
       - name: Generate Scalar API docs
         run: npm run build:api
