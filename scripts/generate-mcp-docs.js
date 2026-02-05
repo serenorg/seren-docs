@@ -1053,7 +1053,7 @@ function generateInstallHtml() {
       <a href="/">API Docs</a>
       <a href="/install-seren/">Install Seren</a>
       <a href="/guides/">Guides</a>
-      <a href="/skills.md">Skills</a>
+      <a href="/schemas/">Schemas</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>
@@ -1278,7 +1278,7 @@ function generateToolsHtml(toolsJson) {
       <a href="/">API Docs</a>
       <a href="/install-seren/">Install Seren</a>
       <a href="/guides/">Guides</a>
-      <a href="/skills.md">Skills</a>
+      <a href="/schemas/">Schemas</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://console.serendb.com/login" target="_blank">Seren Console</a>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☀️</button>

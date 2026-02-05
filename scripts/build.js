@@ -24,7 +24,8 @@ function ensureDirectories() {
   const dirs = [
     DIST,
     path.join(DIST, 'install-seren'),
-    path.join(DIST, 'guides')
+    path.join(DIST, 'guides'),
+    path.join(DIST, 'schemas')
   ];
 
   for (const dir of dirs) {
@@ -87,6 +88,15 @@ function createHeaders() {
 
 # OpenAPI spec for AI agents
 /openapi.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=utf-8
+
+# Schema index and individual schema JSON files
+/schemas/index.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=utf-8
+
+/schemas/*.json
   Access-Control-Allow-Origin: *
   Content-Type: application/json; charset=utf-8
 
@@ -154,7 +164,8 @@ async function main() {
     ['node scripts/build-html-docs.js', 'Generating static HTML API documentation'],
     ['npm run build:llms', 'Generating llms.txt files'],
     ['npm run build:mcp', 'Generating MCP documentation'],
-    ['node scripts/build-guides.js', 'Building manual guides']
+    ['node scripts/build-guides.js', 'Building manual guides'],
+    ['npm run build:schemas', 'Generating individual schema pages']
   ];
 
   let success = true;

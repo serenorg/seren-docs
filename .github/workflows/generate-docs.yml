@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Create dist directory
-        run: mkdir -p dist/install-seren dist/guides
+        run: mkdir -p dist/install-seren dist/guides dist/schemas
 
       - name: Generate Scalar API docs
         run: npm run build:api
@@ -49,6 +49,9 @@ jobs:
 
       - name: Build manual guides
         run: node scripts/build-guides.js
+
+      - name: Generate schema pages
+        run: npm run build:schemas
 
       - name: Fetch install scripts from seren-local
         run: |
