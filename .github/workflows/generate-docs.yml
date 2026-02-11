@@ -53,11 +53,12 @@ jobs:
       - name: Generate schema pages
         run: npm run build:schemas
 
-      - name: Fetch install scripts from seren-local
+      - name: Fetch install scripts and skills
         run: |
           curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.sh" -o dist/install.sh
           curl -fsSL "https://raw.githubusercontent.com/serenorg/seren-local/main/scripts/install.ps1" -o dist/install.ps1
-          echo "Fetched install scripts from seren-local"
+          curl -fsSL "https://api.serendb.com/skill.md" -o dist/skills.md
+          echo "Fetched install scripts and skills.md"
 
       - name: Copy static files and create headers
         run: |
