@@ -1067,8 +1067,28 @@ function generateInstallHtml() {
   <h2>Choose Your Path</h2>
 
   <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
-    <h3 style="margin-top: 0; color: var(--primary);">Option A: Download Signed Binary</h3>
-    <p>Download the signed Seren binary for your operating system.</p>
+    <h3 style="margin-top: 0; color: var(--primary);">Option A: Seren Desktop Application</h3>
+    <p>Download and install the full Seren Desktop application with automatic updates.</p>
+    <ul style="margin: 1rem 0;">
+      <li>Native desktop app built with Tauri</li>
+      <li>Built-in AI chat, project management, and database tools</li>
+      <li>Automatic updates via built-in updater</li>
+      <li>Monaco editor integration</li>
+    </ul>
+    <p><strong>Download Installer:</strong></p>
+    <div id="desktop-download-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+      <a href="https://pub-714fe894394345a0a8a102fbac2b208f.r2.dev/latest/SerenDesktop_aarch64.dmg" class="download-btn" data-os="macos-arm" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
+      <a href="https://pub-714fe894394345a0a8a102fbac2b208f.r2.dev/latest/SerenDesktop_x64.dmg" class="download-btn" data-os="macos-intel" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
+      <a href="https://pub-714fe894394345a0a8a102fbac2b208f.r2.dev/latest/SerenDesktop_x64-setup.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
+      <a href="https://pub-714fe894394345a0a8a102fbac2b208f.r2.dev/latest/SerenDesktop_amd64.AppImage" class="download-btn" data-os="linux-appimage" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (AppImage)</a>
+      <a href="https://pub-714fe894394345a0a8a102fbac2b208f.r2.dev/latest/SerenDesktop_amd64.deb" class="download-btn" data-os="linux-deb" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (DEB)</a>
+    </div>
+    <p style="font-size: 0.85rem; color: #666;">All installers include automatic update support. <a href="https://github.com/serenorg/seren-desktop-issues" target="_blank" rel="noopener">Report issues</a></p>
+  </div>
+
+  <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+    <h3 style="margin-top: 0; color: var(--primary);">Option B: Download Signed Binary</h3>
+    <p>Download the signed Seren Local binary for your operating system.</p>
     <ul style="margin: 1rem 0;">
       <li>Code-signed binaries for macOS, Windows, and Linux</li>
       <li>Built-in MCP server and AI agent support</li>
@@ -1076,17 +1096,17 @@ function generateInstallHtml() {
     </ul>
     <p><strong>Download:</strong></p>
     <div id="download-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_aarch64.dmg" class="download-btn" data-os="macos-arm64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
-      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_x64.dmg" class="download-btn" data-os="macos-x64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
-      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_x64-setup.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
-      <a href="https://github.com/serenorg/seren-desktop/releases/latest/download/SerenDesktop_0.1.0_amd64.deb" class="download-btn" data-os="linux" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (x64)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-arm64" class="download-btn" data-os="macos-arm64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Apple Silicon)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-macos-x64" class="download-btn" data-os="macos-x64" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">macOS (Intel)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-windows-x64.exe" class="download-btn" data-os="windows" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Windows (x64)</a>
+      <a href="https://github.com/serenorg/seren-local/releases/latest/download/seren-linux-x64" class="download-btn" data-os="linux" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #666; color: white; padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Linux (x64)</a>
     </div>
-    <p style="font-size: 0.85rem; color: #666;">All binaries are code-signed. <a href="https://github.com/serenorg/seren-desktop/releases" target="_blank">View all releases</a></p>
+    <p style="font-size: 0.85rem; color: #666;">All binaries are code-signed. <a href="https://github.com/serenorg/seren-local/releases" target="_blank" rel="noopener">View all releases</a></p>
   </div>
 
   <div style="border: 2px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
-    <h3 style="margin-top: 0; color: var(--primary);">Option B: Install Seren Desktop Locally</h3>
-    <p>Install the Seren runtime locally via the command line.</p>
+    <h3 style="margin-top: 0; color: var(--primary);">Option C: Install Seren MCP Server Locally</h3>
+    <p>Install the Seren MCP server to connect any AI tool to Seren.</p>
     <ul style="margin: 1rem 0;">
       <li>Auto-detects your system and installs dependencies</li>
       <li>Installs @serendb/runtime into ~/.seren-local</li>
@@ -1153,31 +1173,48 @@ function generateInstallHtml() {
     });
   }
 
-  // Auto-detect OS and make detected download prominent
+  // Auto-detect OS and highlight the recommended download
   (function() {
     var ua = navigator.userAgent || navigator.platform || '';
-    var buttons = document.querySelectorAll('.download-btn');
-    var recommendedOs = null;
+
+    // For seren-local binaries
+    var localButtons = document.querySelectorAll('#download-buttons .download-btn');
+    var localRecommendedOs = null;
 
     if (/Mac/i.test(ua)) {
-      recommendedOs = /arm64|aarch64/i.test(ua) ? 'macos-arm64' : 'macos-arm64';
+      localRecommendedOs = 'macos-arm64'; // Default to ARM for modern Macs
     } else if (/Win/i.test(ua)) {
-      recommendedOs = 'windows';
+      localRecommendedOs = 'windows';
     } else if (/Linux/i.test(ua)) {
-      recommendedOs = 'linux';
+      localRecommendedOs = 'linux';
     }
 
-    if (recommendedOs) {
-      buttons.forEach(function(btn) {
-        if (btn.dataset.os === recommendedOs) {
+    if (localRecommendedOs) {
+      localButtons.forEach(function(btn) {
+        if (btn.dataset.os === localRecommendedOs) {
           btn.style.background = 'var(--primary)';
-          btn.style.padding = '0.8rem 1.5rem';
-          btn.style.fontSize = '1.1rem';
-          btn.style.order = '-1';
-        } else {
-          btn.style.opacity = '0.6';
-          btn.style.fontSize = '0.8rem';
-          btn.style.padding = '0.4rem 0.8rem';
+          btn.innerHTML = '\\u2713 ' + btn.innerHTML + ' (Recommended)';
+        }
+      });
+    }
+
+    // For Desktop app installers
+    var desktopButtons = document.querySelectorAll('#desktop-download-buttons .download-btn');
+    var desktopRecommendedOs = null;
+
+    if (/Mac/i.test(ua)) {
+      desktopRecommendedOs = 'macos-arm'; // Default to ARM for modern Macs
+    } else if (/Win/i.test(ua)) {
+      desktopRecommendedOs = 'windows';
+    } else if (/Linux/i.test(ua)) {
+      desktopRecommendedOs = 'linux-deb'; // Default to DEB for Linux
+    }
+
+    if (desktopRecommendedOs) {
+      desktopButtons.forEach(function(btn) {
+        if (btn.dataset.os === desktopRecommendedOs) {
+          btn.style.background = 'var(--primary)';
+          btn.innerHTML = '\\u2713 ' + btn.innerHTML + ' (Recommended)';
         }
       });
     }
